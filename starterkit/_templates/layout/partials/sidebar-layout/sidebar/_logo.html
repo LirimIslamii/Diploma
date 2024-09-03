@@ -1,0 +1,49 @@
+<!--begin::Logo-->
+<div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+	<!--begin::Logo image-->
+	<a href="/" class="logo-link">
+		<div class="logo-image">
+			{% getHtmlAttribute 'body' 'data-kt-app-layout' as bodyAttribute %}
+			{% if bodyAttribute == 'dark-sidebar' %}
+			<img alt="Logo" src="{% static 'media/logos/up.png' %}" class="app-sidebar-logo-default" />
+			<span class="logo-text ms-2 text-white fw-bold fs-7">PËRPUNIMI I IMAZHEVE SATELITORE PERMES CNN</span>
+			{% elif bodyAttribute == 'light-sidebar' %}
+			<img alt="Logo" src="{% includeFavicon %}" class="theme-light-show app-sidebar-logo-default" />
+			<img alt="Logo" src="{% includeFavicon %}" class="theme-dark-show app-sidebar-logo-default" />
+			{% endif %}
+			<img alt="Logo" src="{% static 'media/logos/default-small.svg' %}" class="app-sidebar-logo-minimize" />
+		</div>
+	</a>
+</div>
+
+<style>
+	.logo-link {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+	}
+
+	.logo-image {
+		display: flex;
+		align-items: center;
+	}
+
+	.app-sidebar-logo-default {
+		height: 50px;
+	}
+
+	.logo-text {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.app-sidebar-logo-minimize {
+		height: 20px;
+		display: none;
+	}
+
+	.theme-light-show,
+	.theme-dark-show {
+		height: 25px;
+	}
+</style>
