@@ -24,6 +24,9 @@ urlpatterns = [
     # Dashboard urls
     path('', include('dashboards.urls')),
 
+    # Image urls
+    path('', include('image.urls')),
+
     # Auth urls
     path('', include('auth.urls')),
 ]
