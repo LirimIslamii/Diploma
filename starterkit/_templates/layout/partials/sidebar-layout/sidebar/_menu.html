@@ -1,46 +1,49 @@
+{% load static %}
+{% load menu_tags %}
+
 <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
-	<div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true"
-		data-kt-scroll-activate="true" data-kt-scroll-height="auto"
-		data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
-		data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
-		<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu" data-kt-menu="true"
-			data-kt-menu-expand="false">
-			<div class="menu-item">
-				<a class="menu-link active" href="#">
-					<span class="menu-icon">{% getIcon 'element-12' 'fs-2' %}</span>
-					<span class="menu-title">Ballina</span>
-				</a>
-			</div>
-			<div class="menu-item">
-				<a class="menu-link" href="#">
-					<span class="menu-icon">{% getIcon 'setting-4' 'fs-2' %}</span>
-					<span class="menu-title">Menaxhimi i imazhit</span>
-				</a>
-			</div>
-			<div class="menu-item">
-				<a class="menu-link" href="#">
-					<span class="menu-icon">{% getIcon 'chart-line-star' 'fs-2' %}</span>
-					<span class="menu-title">Veglat e Analizës</span>
-				</a>
-			</div>
-			<div class="menu-item">
-				<a class="menu-link" href="#">
-					<span class="menu-icon">{% getIcon 'element-1' 'fs-2' %}</span>
-					<span class="menu-title">Insightet e Modelit</span>
-				</a>
-			</div>
-			<div class="menu-item">
-				<a class="menu-link" href="#">
-					<span class="menu-icon">{% getIcon 'chart-pie-3' 'fs-2' %}</span>
-					<span class="menu-title">Vizualizime</span>
-				</a>
-			</div>
-			<div class="menu-item">
-				<a class="menu-link" href="#">
-					<span class="menu-icon">{% getIcon 'search-list' 'fs-2' %}</span>
-					<span class="menu-title">Kërkim dhe Zhvillim</span>
-				</a>
-			</div>
-		</div>
-	</div>
+    <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true"
+        data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
+        data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
+        <div class="menu menu-column menu-rounded menu-sub-indention px-3" id="kt_app_sidebar_menu" data-kt-menu="true"
+            data-kt-menu-expand="false">
+            <div class="menu-item">
+                <a class="menu-link {% active 'index' 'dashboards' %}" href="{% url 'dashboards:index' %}">
+                    <span class="menu-icon">{% getIcon 'element-12' 'fs-2' %}</span>
+                    <span class="menu-title">Ballina</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a class="menu-link {% active 'management' 'image' %}" href="{% url 'image:management' %}">
+                    <span class="menu-icon">{% getIcon 'setting-4' 'fs-2' %}</span>
+                    <span class="menu-title">Menaxhimi i imazhit</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a class="menu-link {% active 'tools' 'analysis' %}" href="{% url 'analysis:tools' %}">
+                    <span class="menu-icon">{% getIcon 'chart-line-star' 'fs-2' %}</span>
+                    <span class="menu-title">Veglat e Analizës</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a class="menu-link {% active 'insights' 'model' %}" href="{% url 'model:insights' %}">
+                    <span class="menu-icon">{% getIcon 'element-1' 'fs-2' %}</span>
+                    <span class="menu-title">Insightet e Modelit</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a class="menu-link {% active 'index' 'visualization' %}" href="{% url 'visualization:index' %}">
+                    <span class="menu-icon">{% getIcon 'chart-pie-3' 'fs-2' %}</span>
+                    <span class="menu-title">Vizualizime</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a class="menu-link {% active 'development' 'research' %}" href="{% url 'research:development' %}">
+                    <span class="menu-icon">{% getIcon 'search-list' 'fs-2' %}</span>
+                    <span class="menu-title">Kërkim dhe Zhvillim</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>

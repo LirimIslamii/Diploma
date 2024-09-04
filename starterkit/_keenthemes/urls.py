@@ -20,14 +20,12 @@ from _keenthemes.views import SystemView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    # Dashboard urls
-    path('', include('dashboards.urls')),
-
-    # Image urls
-    path('', include('image.urls')),
-
-    # Auth urls
+    path('pages/', include('dashboards.urls')),
+    path('pages/', include('image.urls')),
+    path('pages/', include('analysis.urls')),
+    path('pages/', include('model.urls')),
+    path('pages/', include('visualization.urls')),
+    path('pages/', include('research.urls')),
     path('', include('auth.urls')),
 ]
 

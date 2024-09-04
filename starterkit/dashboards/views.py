@@ -20,24 +20,10 @@ class DashboardsView(TemplateView):
 
     # Predefined function
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-
-        """
-        # Example to get page name. Refer to dashboards/urls.py file.
-        url_name = resolve(self.request.path_info).url_name
-
-        if url_name == 'dashboard-2':
-            # Example to override settings at the runtime
-            settings.KT_THEME_DIRECTION = 'rtl'
-        else:
-            settings.KT_THEME_DIRECTION = 'ltr'
-        """
-
-        # A function to init the global layout. It is defined in _keenthemes/__init__.py file
-        context = KTLayout.init(context)
-
-        # Include vendors and javascript files for dashboard widgets
+        current_url_name = resolve(self.request.path_info).url_name
+        context['current_url_name'] = current_url_name
+        # Initialize layout and add vendors
+        KTLayout.init(context)
         KTTheme.addVendors(['amcharts', 'amcharts-maps', 'amcharts-stock'])
-
         return context
