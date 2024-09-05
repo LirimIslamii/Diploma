@@ -129,10 +129,10 @@ var KTSigninGeneral = function () {
 
                             // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                             Swal.fire({
-                                text: "You have successfully logged in!",
+                                text: "Ju keni hyrë me sukses!",
                                 icon: "success",
                                 buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
+                                confirmButtonText: "Në rregull!",
                                 customClass: {
                                     confirmButton: "btn btn-primary"
                                 }

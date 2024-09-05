@@ -26,11 +26,8 @@ class AuthSigninView(TemplateView):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                # Redirect to dashboard or another page
-                return redirect('pages/dashboards')
+                return redirect('/')
             else:
-                # Return an error message if authentication fails
                 return render(request, self.template_name, {'form': form, 'error': 'Invalid credentials'})
         else:
-            # Form is not valid, return form errors
             return render(request, self.template_name, {'form': form})

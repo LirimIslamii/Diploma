@@ -26,11 +26,14 @@ SECRET_KEY = 'django-insecure-blehs+vjho@s4qug%9ferf0-tucvbr9#_1k2!#ebs4u68@)ss+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 MIDDLEWARE_CLASSES = [
     'livereload.middleware.LiveReloadScript'
 ]
+
+LOGIN_URL = '/auth/signin'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    '_keenthemes.middleware.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = '_keenthemes.urls'

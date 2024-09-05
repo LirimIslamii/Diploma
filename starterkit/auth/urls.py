@@ -4,10 +4,12 @@ from auth.signin.views import AuthSigninView
 from auth.signup.views import AuthSignupView
 from auth.reset_password.views import AuthResetPasswordView
 from auth.new_password.views import AuthNewPasswordView
+from auth.logout.views import LogOutView
 
 app_name = 'auth'
 
 urlpatterns = [
+    path('logout', LogOutView, name='logout'),
     path('signin', AuthSigninView.as_view(template_name = 'pages/auth/signin.html'), name='signin'),
     path('signup', AuthSignupView.as_view(template_name = 'pages/auth/signup.html'), name='signup'),
     path('reset-password', AuthResetPasswordView.as_view(template_name = 'pages/auth/reset-password.html'), name='reset-password'),
