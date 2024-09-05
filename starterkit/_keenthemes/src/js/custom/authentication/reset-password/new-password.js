@@ -97,24 +97,16 @@ var KTAuthNewPassword = function() {
 
                         // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                         Swal.fire({
-                            text: "You have successfully reset your password!",
+                            text: "Ju jeni regjistruar me sukses në sistem!",
                             icon: "success",
                             buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
+                            confirmButtonText: "Ok!",
                             customClass: {
                                 confirmButton: "btn btn-primary"
                             }
                         }).then(function (result) {
                             if (result.isConfirmed) {
-                                form.querySelector('[name="password"]').value= "";
-                                form.querySelector('[name="confirm-password"]').value= "";
-                                passwordMeter.reset();  // reset password meter
-                                //form.submit();
-
-                                var redirectUrl = form.getAttribute('data-kt-redirect-url');
-                                if (redirectUrl) {
-                                    location.href = redirectUrl;
-                                }
+                                form.submit();
                             }
                         });
                     }, 1500);

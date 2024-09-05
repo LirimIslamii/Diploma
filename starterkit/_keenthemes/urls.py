@@ -26,7 +26,7 @@ urlpatterns = [
     path('pages/', include('model.urls')),
     path('pages/', include('visualization.urls')),
     path('pages/', include('research.urls')),
-    path('', include('auth.urls')),
+    path('auth/', include('auth.urls')),
 ]
 
 handler404 = SystemView.as_view(template_name = 'pages/system/not-found.html', status=404)
