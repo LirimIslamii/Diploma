@@ -15,30 +15,37 @@
         </div>
     </div>
     <div class="separator separator-content my-14">
-        <span class="w-200px text-gray-500 fw-semibold fs-7">Kyçu përmes kredencialeve tuaja</span>
+        <span class="w-300px text-gray-500 fw-semibold fs-7">Ju lutem vendosni emrin dhe fjalëkalimin tuaj.</span>
     </div>
+
     <div class="fv-row mb-10"><label class="form-label fs-6 fw-bold text-gray-900">Emri përdoruesit</label>
         <input type="text" placeholder="Emri përdoruesit" name="username" autocomplete="off"
             class="form-control bg-transparent" />
-        <div class="fv-plugins-message-container">
-            <div class="fv-help-block">
+    </div>
+
+    <div class="fv-row mb-5" data-kt-password-meter="true"><label
+            class="form-label fs-6 fw-bold text-gray-900">Fjalëkalimi</label>
+
+        <div class="mb-1">
+            <div class="position-relative mb-3">
+                <input class="form-control bg-transparent" type="password" placeholder="Fjalëkalimi" name="password"
+                    autocomplete="off" />
+
+                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                    data-kt-password-meter-control="visibility">
+                    <i class="bi bi-eye-slash fs-2"></i>
+                    <i class="bi bi-eye fs-2 d-none"></i>
+                </span>
             </div>
         </div>
     </div>
 
-    <div class="fv-row mb-10"><label class="form-label fs-6 fw-bold text-gray-900">Fjalëkalimi</label>
-        <input type="password" placeholder="Fjalëkalimi" name="password" autocomplete="off"
-            class="form-control bg-transparent" />
-        <div class="fv-plugins-message-container">
-            <div class="fv-help-block">
-            </div>
-        </div>
-    </div>
     <div class="d-grid mb-10">
         <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
             {% include 'partials/general/_button-indicator.html' with label='Sign In' %}
         </button>
     </div>
+
     <div class="text-gray-500 text-center fw-semibold fs-6">
         Nuk jeni anëtar?
 

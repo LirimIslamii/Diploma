@@ -1,11 +1,10 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.contrib.auth.forms import AuthenticationForm
-from django.conf import settings
 from _keenthemes.__init__ import KTLayout
 from _keenthemes.libs.theme import KTTheme
+from django.shortcuts import redirect
 
 class AuthSigninView(TemplateView):
     template_name = 'pages/auth/signin.html'
@@ -28,6 +27,6 @@ class AuthSigninView(TemplateView):
                 login(request, user)
                 return redirect('/')
             else:
-                return render(request, self.template_name, {'form': form, 'error': 'Invalid credentials'})
+                return JsonResponse({'error': 'Username ose fjalëkalimi janë të pasakta'}, status=400)
         else:
-            return render(request, self.template_name, {'form': form})
+            return JsonResponse({'error': form.errors.as_json()}, status=400)

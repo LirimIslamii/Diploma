@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" method="post" action="{% url 'auth:signup' %}">
+<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" method="post" data-kt-redirect-url="/" action="{% url 'auth:signup' %}">
     {% csrf_token %}
     <div class="text-center mb-11">
         <div class="fw-bolder text-primary mb-3 fs-5">
@@ -15,22 +15,27 @@
     </div>
     <div class="separator separator-content my-10"><span class="w-125px text-gray-500 fw-bold fs-7">Regjistrohu në
             sistem</span></div>
-    <div class="fv-row mb-8">
+
+
+    <div class="fv-row mb-5"><label class="form-label fs-6 fw-bold text-gray-900">Emri përdoruesit</label>
         <input type="text" placeholder="Emri përdoruesit" name="username" autocomplete="off"
-            class="form-control bg-transparent" />
+            class="form-control  bg-transparent" />
     </div>
-    <div class="fv-row mb-8">
-        <input type="text" placeholder="Emaili" name="email" autocomplete="off" class="form-control bg-transparent" />
-    </div>
-    <div class="fv-row mb-8">
+    <div class="fv-row mb-5"><label class="form-label fs-6 fw-bold text-gray-900">Emri</label>
         <input type="text" placeholder="Emri" name="first-name" autocomplete="off"
             class="form-control bg-transparent" />
     </div>
-    <div class="fv-row mb-8">
+    <div class="fv-row mb-5"><label class="form-label fs-6 fw-bold text-gray-900">Mbiemri</label>
         <input type="text" placeholder="Mbiemri" name="last-name" autocomplete="off"
             class="form-control bg-transparent" />
     </div>
-    <div class="fv-row mb-8" data-kt-password-meter="true">
+    <div class="fv-row mb-5">
+        <label class="form-label fs-6 fw-bold text-gray-900">Email</label>
+        <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+        <span class="text-danger fw-bold"></span>
+    </div>
+    <div class="fv-row mb-5" data-kt-password-meter="true"><label
+            class="form-label fs-6 fw-bold text-gray-900">Fjalëkalimi</label>
         <div class="mb-1">
             <div class="position-relative mb-3">
                 <input class="form-control bg-transparent" type="password" placeholder="Fjalëkalimi" name="password1"
@@ -50,12 +55,8 @@
             </div>
         </div>
         <div class="text-muted">
-            Use 8 or more characters with a mix of letters, numbers & symbols.
+            Përdorni 8 ose më shumë karaktere me një përzierje shkronjash, numrash dhe simbolesh
         </div>
-    </div>
-    <div class="fv-row mb-8">
-        <input type="text" placeholder="Konfirmo fjalëkalimin" name="password2" type="password" autocomplete="off"
-            class="form-control bg-transparent" />
     </div>
     <div class="fv-row mb-8">
         <label class="form-check form-check-inline">
@@ -65,9 +66,9 @@
             </span>
         </label>
     </div>
-    <div class="d-grid mb-10">
+    <div class="d-grid mb-5">
         <button type="submit" id="kt_sign_up_submit" class="btn btn-primary">
-            {% include 'partials/general/_button-indicator.html' with label='Sign Up' %}
+            {% include 'partials/general/_button-indicator-register.html' with label='Sign Up' %}
         </button>
     </div>
     <div class="text-gray-500 text-center fw-semibold fs-6">
