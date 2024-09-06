@@ -134,7 +134,10 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-assets
+# Node modules
 node_modules
-yarn.lock
-starterkit/_keenthemes/src/**/webpack
+
+# Allowed to be pushed to repository
+# assets
+# yarn.lock
+# starterkit/_keenthemes/src/**/webpack
