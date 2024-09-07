@@ -1,1 +1,1 @@
-web gunicorn CNN-SatelliteImaging.wsgi --log-file -
+web: gunicorn CNN.wsgi --log-file -
