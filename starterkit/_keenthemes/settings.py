@@ -155,7 +155,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'assets',
 ]
 
-
 django_heroku.settings(locals())
 
 # Default primary key field type
