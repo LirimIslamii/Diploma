@@ -1,1 +1,0 @@
-web gunicorn cnn.wsgi:application --log-file -
