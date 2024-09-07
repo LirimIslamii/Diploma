@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-blehs+vjho@s4qug%9ferf0-tucvbr9#_1k2!#ebs4u68@)ss+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 MIDDLEWARE_CLASSES = [
     'livereload.middleware.LiveReloadScript'
@@ -155,7 +155,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'assets',
 ]
 
-django_heroku.settings(locals())
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
