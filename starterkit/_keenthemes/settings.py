@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+import django_heroku
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -96,9 +99,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'Diploma',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': 'localhost\\MSSQLSERVER01',
+        'USER': 'diplomaAdmin',
+        'PASSWORD': '123456Aa@',
+        'HOST': 'sqldiploma.database.windows.net',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'Trusted_Connection': 'yes'
@@ -147,10 +150,13 @@ LOCALE_PATHS = [
 
 STATIC_URL = 'assets/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / 'assets',
 ]
 
+
+django_heroku.settings(locals())
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
