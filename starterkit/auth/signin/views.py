@@ -1,10 +1,8 @@
 from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
 from django.views.generic import TemplateView
-from django.contrib.auth.forms import AuthenticationForm
-from _keenthemes.__init__ import KTLayout
+from django.contrib import messages
 from _keenthemes.libs.theme import KTTheme
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 class AuthSigninView(TemplateView):
     template_name = 'pages/auth/signin.html'
@@ -18,15 +16,19 @@ class AuthSigninView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
+        result = self.login(request)
+        return result
+
+    def login(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
                 login(request, user)
                 return redirect('/')
             else:
-                return JsonResponse({'error': 'Username ose fjalëkalimi janë të pasakta'}, status=400)
+                messages.error(request, 'Ky përdorues është i çaktivizuar.')
         else:
-            return JsonResponse({'error': form.errors.as_json()}, status=400)
+            messages.error(request, 'Përpjekje e pavlefshme për kyçje. Emri i përdoruesit ose fjalëkalimi është i pasakt.')
+        return self.render_to_response(self.get_context_data())

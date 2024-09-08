@@ -11,14 +11,14 @@ var KTSigninGeneral = (function () {
         username: {
           validators: {
             notEmpty: {
-              message: "Kjo fushë është obligative",
+              message: '<strong class="fw-bold">Kjo fushë është obligative</strong>',
             },
           },
         },
         password: {
           validators: {
             notEmpty: {
-              message: "Kjo fushë është obligative",
+              message: '<strong class="fw-bold">Kjo fushë është obligative</strong>',
             },
           },
         },
@@ -27,8 +27,8 @@ var KTSigninGeneral = (function () {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap: new FormValidation.plugins.Bootstrap5({
           rowSelector: ".fv-row",
-          eleInvalidClass: "",
-          eleValidClass: "",
+          eleInvalidClass: "is-invalid",
+          eleValidClass: "is-valid",
         }),
       },
     });
@@ -48,39 +48,22 @@ var KTSigninGeneral = (function () {
   };
 
   var handleSubmitAjax = function () {
-    debugger
-    submitButton.addEventListener("click", function (e) {
+    submitButton.addEventListener('click', function (e) {
       e.preventDefault();
       validator.validate().then(function (status) {
-        if (status === "Valid") {
-          submitButton.setAttribute("data-kt-indicator", "on");
+        if (status === 'Valid') {
+          submitButton.setAttribute('data-kt-indicator', 'on');
           submitButton.disabled = true;
 
-          axios
-            .post(
-              submitButton.closest("form").getAttribute("action"),
-              new FormData(form)
-            )
+          axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form))
             .then(function (response) {
-              submitButton.removeAttribute("data-kt-indicator");
+              submitButton.removeAttribute('data-kt-indicator');
               submitButton.disabled = false;
-              Swal.fire({
-                text: "You have successfully logged in!",
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                  confirmButton: "btn btn-primary",
-                },
-              }).then(function (result) {
-                if (result.isConfirmed) {
-                  const redirectUrl = form.getAttribute("data-kt-redirect-url");
-                  location.href = redirectUrl;
-                }
-              });
+              const redirectUrl = form.getAttribute('data-kt-redirect-url');
+              location.href = redirectUrl;
             })
             .catch(function (error) {
-              submitButton.removeAttribute("data-kt-indicator");
+              submitButton.removeAttribute('data-kt-indicator');
               submitButton.disabled = false;
               var errorMessage = error.response.data.error;
               Swal.fire({
@@ -89,8 +72,8 @@ var KTSigninGeneral = (function () {
                 buttonsStyling: false,
                 confirmButtonText: "Provoni përsëri",
                 customClass: {
-                  confirmButton: "btn btn-primary",
-                },
+                  confirmButton: "btn btn-primary"
+                }
               });
             });
         }

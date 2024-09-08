@@ -6,8 +6,7 @@
 
 {% block content %}
 
-<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" method="post" data-kt-redirect-url="/"
-    action="{% url 'auth:signin' %}">
+<form class="form w-100" id="kt_sign_in_form" method="post" data-kt-redirect-url="/" action="{% url 'auth:signin' %}">
     {% csrf_token %}
     <div class="text-center mb-11">
         <div class="fw-bolder text-primary mb-3 fs-5">
@@ -18,6 +17,29 @@
         <span class="w-300px text-gray-500 fw-semibold fs-7">Ju lutem vendosni emrin dhe fjalëkalimin tuaj.</span>
     </div>
 
+    {% if messages %}
+    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
+        <span class="svg-icon svg-icon-3x svg-icon-warning me-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"></rect>
+                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"></rect>
+                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"></rect>
+            </svg>
+        </span>
+        <div class="d-flex flex-stack flex-grow-1">
+            <div class="fw-bold">
+                <h4 class="text-gray-800 fw-bolder fs-5">Kujdes!</h4>
+                <div class="fs-6 text-gray-600">
+                    <div class="d-flex flex-column">
+                        {% for message in messages %}
+                        <div class="alert-text fs-7">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="fv-row mb-10"><label class="form-label fs-6 fw-bold text-gray-900">Emri përdoruesit</label>
         <input type="text" placeholder="Emri përdoruesit" name="username" autocomplete="off"
             class="form-control bg-transparent" />
@@ -25,12 +47,10 @@
 
     <div class="fv-row mb-5" data-kt-password-meter="true"><label
             class="form-label fs-6 fw-bold text-gray-900">Fjalëkalimi</label>
-
         <div class="mb-1">
             <div class="position-relative mb-3">
                 <input class="form-control bg-transparent" type="password" placeholder="Fjalëkalimi" name="password"
                     autocomplete="off" />
-
                 <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
                     data-kt-password-meter-control="visibility">
                     <i class="bi bi-eye-slash fs-2"></i>

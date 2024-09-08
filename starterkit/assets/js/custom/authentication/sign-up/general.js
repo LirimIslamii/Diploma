@@ -7,26 +7,26 @@ var KTSignupGeneral = (function () {
     var passwordMeter;
 
     var handleForm = function () {
-        validator = FormValidation.formValidation(form, {
+        var validator = FormValidation.formValidation(form, {
             fields: {
                 'first-name': {
                     validators: {
                         notEmpty: {
-                            message: 'Kjo fushë është obligative'
+                            message: '<strong class="d-none"></strong>'
                         }
                     }
                 },
                 'last-name': {
                     validators: {
                         notEmpty: {
-                            message: 'Kjo fushë është obligative'
+                            message: '<strong class="d-none"></strong>'
                         }
                     }
                 },
                 username: {
                     validators: {
                         notEmpty: {
-                            message: 'Kjo fushë është obligative'
+                            message: '<strong class="d-none"></strong>'
                         }
                     }
                 },
@@ -34,22 +34,31 @@ var KTSignupGeneral = (function () {
                     validators: {
                         regexp: {
                             regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: 'Emaili nuk është i vlefshëm'
+                            message: '<strong class="fw-bold">Emaili nuk është i vlefshëm</strong>'
                         },
                         notEmpty: {
-                            message: 'Kjo fushë është obligative'
+                            message: '<strong class="d-none"></strong>'
                         }
                     }
                 },
                 password1: {
                     validators: {
-                        notEmpty: {
-                            message: 'Kjo fushë është obligative'
-                        },
                         callback: {
-                            message: 'Ju lutemi shkruani fjalëkalimin e vlefshëm',
+                            message: '<strong class="d-none"></strong>',
                             callback: function (input) {
-                                return input.value.length > 0 && validatePassword();
+                                var value = input.value;
+                                if (value === '') {
+                                    return {
+                                        valid: false,
+                                        message: '<strong class="d-none"></strong>'
+                                    };
+                                } else if (!validatePassword(value)) {
+                                    return {
+                                        valid: false,
+                                        message: '<strong class="fw-bold">Ju lutemi shkruani fjalëkalimin e vlefshëm</strong>'
+                                    };
+                                }
+                                return true;
                             }
                         }
                     }
@@ -57,20 +66,20 @@ var KTSignupGeneral = (function () {
                 password2: {
                     validators: {
                         notEmpty: {
-                            message: 'Kërkohet konfirmimi i fjalëkalimit'
+                            message: '<strong class="fw-bold">Kërkohet konfirmimi i fjalëkalimit</strong>'
                         },
                         identical: {
                             compare: function () {
                                 return form.querySelector('[name="password1"]').value;
                             },
-                            message: 'Fjalëkalimet nuk janë të njëjta'
+                            message: '<strong class="fw-bold">Fjalëkalimet nuk janë të njëjta</strong>'
                         }
                     }
                 },
                 toc: {
                     validators: {
                         notEmpty: {
-                            message: 'Ju duhet të pranoni termat dhe kushtet'
+                            message: '<strong class="fw-bold">Ju duhet të pranoni termat dhe kushtet</strong>'
                         }
                     }
                 }
@@ -79,8 +88,8 @@ var KTSignupGeneral = (function () {
                 trigger: new FormValidation.plugins.Trigger(),
                 bootstrap: new FormValidation.plugins.Bootstrap5({
                     rowSelector: '.fv-row',
-                    eleInvalidClass: '',
-                    eleValidClass: ''
+                    eleInvalidClass: 'is-invalid',
+                    eleValidClass: 'is-valid'
                 })
             }
         });
@@ -96,20 +105,8 @@ var KTSignupGeneral = (function () {
                         .then(function (response) {
                             submitButton.removeAttribute('data-kt-indicator');
                             submitButton.disabled = false;
-                            Swal.fire({
-                                text: "Ju jeni regjistruar me sukses!",
-                                icon: "success",
-                                buttonsStyling: false,
-                                confirmButtonText: "Në rregull!",
-                                customClass: {
-                                    confirmButton: "btn btn-primary"
-                                }
-                            }).then(function (result) {
-                                if (result.isConfirmed) {
-                                    const redirectUrl = form.getAttribute('data-kt-redirect-url');
-                                    location.href = redirectUrl;
-                                }
-                            });
+                            const redirectUrl = form.getAttribute('data-kt-redirect-url');
+                            window.location.href = redirectUrl;
                         })
                         .catch(function (error) {
                             submitButton.removeAttribute('data-kt-indicator');
@@ -131,7 +128,7 @@ var KTSignupGeneral = (function () {
     };
 
     var validatePassword = function () {
-        return passwordMeter.getScore() > 50;
+        return passwordMeter ? passwordMeter.getScore() > 50 : false;
     };
 
     return {
