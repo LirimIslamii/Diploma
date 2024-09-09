@@ -35,14 +35,10 @@ var KTSigninGeneral = (function () {
       },
     });
 
-    form.querySelectorAll("input").forEach(function (input) {
+    form.querySelectorAll("input[name=password]").forEach(function (input) {
       input.addEventListener("input", function () {
-        validator.validate().then(function (status) {
-          document
-            .querySelectorAll(".custom-input")
-            .forEach(function (element) {
-              element.classList.add("is-valid");
-            });
+        document.querySelectorAll(".custom-input").forEach(function (element) {
+          element.classList.add("is-valid");
         });
       });
     });

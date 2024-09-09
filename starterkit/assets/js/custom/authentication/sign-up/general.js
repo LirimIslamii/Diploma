@@ -65,21 +65,6 @@ var KTSignupGeneral = (function () {
             },
           },
         },
-        password2: {
-          validators: {
-            notEmpty: {
-              message:
-                '<strong class="fw-bold">Kërkohet konfirmimi i fjalëkalimit</strong>',
-            },
-            identical: {
-              compare: function () {
-                return form.querySelector('[name="password1"]').value;
-              },
-              message:
-                '<strong class="fw-bold">Fjalëkalimet nuk janë të njëjta</strong>',
-            },
-          },
-        },
         toc: {
           validators: {
             notEmpty: {
@@ -99,14 +84,10 @@ var KTSignupGeneral = (function () {
       },
     });
 
-    form.querySelectorAll("input").forEach(function (input) {
+    form.querySelectorAll("input[name=password1]").forEach(function (input) {
       input.addEventListener("input", function () {
-        validator.validate().then(function (status) {
-          document
-            .querySelectorAll(".custom-input1")
-            .forEach(function (element) {
-              element.classList.add("is-valid");
-            });
+        document.querySelectorAll(".custom-input1").forEach(function (element) {
+          element.classList.add("is-valid");
         });
       });
     });
@@ -117,10 +98,11 @@ var KTSignupGeneral = (function () {
         document.querySelectorAll(".custom-input1").forEach(function (element) {
           element.classList.add("is-valid");
         });
+
         if (status === "Valid") {
           submitButton.setAttribute("data-kt-indicator", "on");
           submitButton.disabled = true;
-
+            
           axios
             .post(
               submitButton.closest("form").getAttribute("action"),
@@ -129,15 +111,13 @@ var KTSignupGeneral = (function () {
             .then(function (response) {
               submitButton.removeAttribute("data-kt-indicator");
               submitButton.disabled = false;
-              const redirectUrl = form.getAttribute("data-kt-redirect-url");
-              window.location.href = redirectUrl;
+              location.href = '/'
             })
             .catch(function (error) {
               submitButton.removeAttribute("data-kt-indicator");
               submitButton.disabled = false;
-              var errorMessage = error.response.data.error;
               Swal.fire({
-                text: errorMessage,
+                text: error.response.data.message,
                 icon: "warning",
                 buttonsStyling: false,
                 confirmButtonText: "Provoni përsëri",

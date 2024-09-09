@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from _keenthemes.__init__ import KTLayout
 from _keenthemes.libs.theme import KTTheme
-from django.shortcuts import render
+from django.http import JsonResponse
 
 class AuthSignupView(TemplateView):
     template_name = 'pages/auth/signup.html'
@@ -26,12 +26,10 @@ class AuthSignupView(TemplateView):
         password1 = request.POST.get('password1', '').strip()
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'Ky emër përdoruesi ekziston tashmë.')
-            return self.render_to_response(self.get_context_data())
+            return JsonResponse({'status': 'warning', 'message': 'Ky emër përdoruesi ekziston tashmë.'}, status=400)
 
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Ky email ekziston tashmë.')
-            return self.render_to_response(self.get_context_data())
+            return JsonResponse({'status': 'warning', 'message': 'Ky email ekziston tashmë.'}, status=400)
 
         try:
             user = User.objects.create(
@@ -44,5 +42,4 @@ class AuthSignupView(TemplateView):
             
             return self.render_to_response(self.get_context_data())
         except Exception as e:
-            messages.error(request, 'Ka ndodhur një gabim gjatë regjistrimit. Ju lutemi provoni përsëri.')
-            return self.render_to_response(self.get_context_data())
+            return JsonResponse({'status': 'warning', 'message': 'Ka ndodhur një gabim gjatë regjistrimit. Ju lutemi provoni përsëri.'}, status=400)
