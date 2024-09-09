@@ -25,18 +25,15 @@ class AuthSignupView(TemplateView):
         email = request.POST.get('email', '').strip()
         password1 = request.POST.get('password1', '').strip()
 
-        # Check if username already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Ky emër përdoruesi ekziston tashmë.')
             return self.render_to_response(self.get_context_data())
 
-        # Check if email already exists
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Ky email ekziston tashmë.')
             return self.render_to_response(self.get_context_data())
 
         try:
-            # Create the user
             user = User.objects.create(
                 username=username,
                 first_name=request.POST.get('first-name', '').strip(),
@@ -44,11 +41,8 @@ class AuthSignupView(TemplateView):
                 email=email,
                 password=make_password(password1),
             )
-
-            # Display success message
-            messages.success(request, 'Regjistrimi u bë me sukses. Ju lutemi kyçuni tani.')
+            
             return self.render_to_response(self.get_context_data())
-
         except Exception as e:
             messages.error(request, 'Ka ndodhur një gabim gjatë regjistrimit. Ju lutemi provoni përsëri.')
             return self.render_to_response(self.get_context_data())
