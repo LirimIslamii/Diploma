@@ -11,14 +11,16 @@ var KTSigninGeneral = (function () {
         username: {
           validators: {
             notEmpty: {
-              message: '<strong class="fw-bold">Kjo fushë është obligative</strong>',
+              message:
+                '<strong class="fw-bold">Kjo fushë është obligative</strong>',
             },
           },
         },
         password: {
           validators: {
             notEmpty: {
-              message: '<strong class="fw-bold">Kjo fushë është obligative</strong>',
+              message:
+                '<strong class="fw-bold">Kjo fushë është obligative</strong>',
             },
           },
         },
@@ -32,12 +34,27 @@ var KTSigninGeneral = (function () {
         }),
       },
     });
+
+    form.querySelectorAll("input").forEach(function (input) {
+      input.addEventListener("input", function () {
+        validator.validate().then(function (status) {
+          document
+            .querySelectorAll(".custom-input")
+            .forEach(function (element) {
+              element.classList.add("is-valid");
+            });
+        });
+      });
+    });
   };
 
   var handleSubmitDemo = function (e) {
     submitButton.addEventListener("click", function (e) {
       e.preventDefault();
       validator.validate().then(function (status) {
+        document.querySelectorAll(".custom-input").forEach(function (element) {
+          element.classList.add("is-valid");
+        });
         if (status == "Valid") {
           submitButton.setAttribute("data-kt-indicator", "on");
           submitButton.disabled = true;
@@ -55,15 +72,19 @@ var KTSigninGeneral = (function () {
           submitButton.setAttribute('data-kt-indicator', 'on');
           submitButton.disabled = true;
 
-          axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form))
+          axios
+            .post(
+              submitButton.closest("form").getAttribute("action"),
+              new FormData(form)
+            )
             .then(function (response) {
-              submitButton.removeAttribute('data-kt-indicator');
+              submitButton.removeAttribute("data-kt-indicator");
               submitButton.disabled = false;
-              const redirectUrl = form.getAttribute('data-kt-redirect-url');
+              const redirectUrl = form.getAttribute("data-kt-redirect-url");
               location.href = redirectUrl;
             })
             .catch(function (error) {
-              submitButton.removeAttribute('data-kt-indicator');
+              submitButton.removeAttribute("data-kt-indicator");
               submitButton.disabled = false;
               var errorMessage = error.response.data.error;
               Swal.fire({
@@ -72,8 +93,8 @@ var KTSigninGeneral = (function () {
                 buttonsStyling: false,
                 confirmButtonText: "Provoni përsëri",
                 customClass: {
-                  confirmButton: "btn btn-primary"
-                }
+                  confirmButton: "btn btn-primary",
+                },
               });
             });
         }

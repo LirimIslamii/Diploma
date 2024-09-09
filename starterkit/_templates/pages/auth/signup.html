@@ -7,10 +7,15 @@
 {% block content %}
 
 <style>
-    .more-larger {
+    .custom-input1.is-valid {
+        margin-right: 10px;
+    }
+
+    .custom-input1.is-invalid {
         margin-right: 10px;
     }
 </style>
+
 <form class="form w-100" id="kt_sign_up_form" method="post" data-kt-redirect-url="/"
     action="{% url 'auth:signup' %}">
     {% csrf_token %}
@@ -73,7 +78,7 @@
                 <input class="form-control bg-transparent" type="password" placeholder="Fjalëkalimi" name="password1"
                     autocomplete="off" />
 
-                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 more-larger"
+                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 custom-input1"
                     data-kt-password-meter-control="visibility">
                     <i class="bi bi-eye-slash fs-2"></i>
                     <i class="bi bi-eye fs-2 d-none"></i>

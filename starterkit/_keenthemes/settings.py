@@ -97,9 +97,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'Diploma',
-        'USER': 'diplomaAdmin',
-        'PASSWORD': '123456Aa@',
-        'HOST': 'sqldiploma.database.windows.net',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost\MSSQLSERVER01',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'Trusted_Connection': 'yes'
