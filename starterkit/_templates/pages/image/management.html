@@ -6,6 +6,22 @@
 
 {% block content %}
 
-<div>Lirim Islami</div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% translate "Ngarko Imazhin" %}</button>
+</form>
+
+{% if predictions %}
+    <div>
+        <h2>{% translate "Rezultatet e Përpunimit" %}</h2>
+        <ul>
+            {% for result in predictions %}
+            <li>{{ result.name }}: {{ result.probability }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
 
 {% endblock content %}
