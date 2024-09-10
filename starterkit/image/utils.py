@@ -1,40 +1,36 @@
 import numpy as np
-from tensorflow.keras.preprocessing import image
+import torch
+from tensorflow.keras.preprocessing import image as keras_image
 from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
-import logging
+from PIL import Image
+from .neural_models import UNetResNet
 
-# Set up logging
-logging.basicConfig(level=logging.INFO, filename='image_processing.log', filemode='a',
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+def load_torch_segmentation_model():
+    model = UNetResNet(num_classes=2)
+    model.eval()  # Set the model to evaluation mode if not loading from a file
+    return model
 
 def process_image(image_path):
-    try:
-        # Load the pre-trained VGG16 model
-        model = VGG16(weights='imagenet')
-        logging.info(f"Model loaded successfully for the image at {image_path}")
-        
-        # Pre-process the image
-        img = image.load_img(image_path, target_size=(224, 224))
-        img_array = image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array = preprocess_input(img_array)
-        
-        # Make predictions
-        predictions = model.predict(img_array)
-        decoded_predictions = decode_predictions(predictions, top=3)[0]
-        
-        # Logging the predictions
-        logging.info(f"Predictions for {image_path}: {decoded_predictions}")
-        
-        # Creating a structured response
-        results = [{
-            'name': pred[1],
-            'probability': f"{pred[2]*100:.2f}%"
-        } for pred in decoded_predictions]
-        
-        return results
-    
-    except Exception as e:
-        logging.error(f"An error occurred while processing the image {image_path}: {str(e)}")
-        raise
+    model = VGG16(weights='imagenet')
+    img = keras_image.load_img(image_path, target_size=(224, 224))
+    img_array = keras_image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = preprocess_input(img_array)
+    predictions = model.predict(img_array)
+    return decode_predictions(predictions, top=3)[0]
 
+def segment_image_torch(image_path, model):
+    img = keras_image.load_img(image_path, target_size=(256, 256))
+    img_array = keras_image.img_to_array(img)
+    img_tensor = torch.from_numpy(np.expand_dims(img_array, axis=0)).float()
+    img_tensor /= 255.0
+
+    with torch.no_grad():
+        prediction = model(img_tensor)
+        prediction = torch.sigmoid(prediction)
+        mask = prediction.numpy() > 0.5
+
+    mask_image = Image.fromarray((mask[0, 0, :, :] * 255).astype(np.uint8))
+    mask_path = image_path.replace('.jpg', '_mask.png')
+    mask_image.save(mask_path)
+    return mask_path

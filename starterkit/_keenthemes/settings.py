@@ -89,8 +89,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = '_keenthemes.wsgi.application'
 
-MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 

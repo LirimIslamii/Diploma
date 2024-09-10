@@ -6,22 +6,38 @@
 
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% translate "Ngarko Imazhin" %}</button>
+<form class="form mt-5" action="#" method="post">
+    <div class="fv-row">
+        <div class="dropzone" id="kt_dropzonejs_example_1">
+            <div class="dz-message needsclick">
+                <i class="ki-duotone ki-file-up fs-3x text-primary"><span class="path1"></span><span
+                        class="path2"></span></i>
+                <div class="ms-4">
+                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Kliko për të ngarkuar fotografitë.</h3>
+                    <span class="fs-7 fw-semibold text-gray-500">Ngarko deri në 10 fotografi</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
-{% if predictions %}
-    <div>
-        <h2>{% translate "Rezultatet e Përpunimit" %}</h2>
-        <ul>
-            {% for result in predictions %}
-            <li>{{ result.name }}: {{ result.probability }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
-
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Dropzone("#kt_dropzonejs_example_1", {
+            url: "https://keenthemes.com/scripts/void.php",
+            paramName: "file",
+            maxFiles: 10,
+            maxFilesize: 10, // MB
+            addRemoveLinks: true,
+            accept: function (file, done) {
+                if (file.name == "wow.jpg") {
+                    done("Naha, you don't.");
+                } else {
+                    done();
+                }
+            }
+        });
+    });
+</script>
 
 {% endblock content %}
