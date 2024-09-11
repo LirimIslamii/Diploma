@@ -2,24 +2,88 @@
 
 {% load i18n %}
 
-{% block title %}{% translate "Menaxhimi i imazhit" %}{% endblock %}
+{% block title %}{% translate "Parametrat e modelit" %}{% endblock %}
 
 {% block content %}
 
-<form class="form mt-5" action="#" method="post">
-    <div class="fv-row">
-        <div class="dropzone" id="kt_dropzonejs_example_1">
-            <div class="dz-message needsclick">
-                <i class="ki-duotone ki-file-up fs-3x text-primary"><span class="path1"></span><span
-                        class="path2"></span></i>
-                <div class="ms-4">
-                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Kliko për të ngarkuar fotografitë.</h3>
-                    <span class="fs-7 fw-semibold text-gray-500">Ngarko deri në 10 fotografi</span>
-                </div>
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h3 class="card-title fs-6">Cakto parametrat e modelit sipas nevojës së imazhit</h3>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-sm btn-light">
+                Action
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 form-group">
+                <label class="required form-label">Shkalla e të mësuarit</label>
+                <input type="number" class="form-control form-control-sm" maxlength="100" />
+            </div>
+            <div class="col-md-3 col-sm-6 form-group">
+                <label class="required form-label">Numri i epokave</label>
+                <input type="number" class="form-control form-control-sm" maxlength="100" />
+            </div>
+            <div class="col-md-3 col-sm-6 form-group">
+                <label class="required form-label">Madhësia e grupit</label>
+                <input type="number" class="form-control form-control-sm" maxlength="50" />
+            </div>
+            <div class="col-md-3 col-sm-6 form-group">
+                <label class="required form-label">Numri i kernelëve</label>
+                <input type="number" class="form-control form-control-sm" maxlength="30" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Madhësia e kernelit</label>
+                <input type="number" class="form-control form-control-sm" maxlength="30" />
+            </div>
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Optimizuesi</label>
+                <select class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion">
+                    <option></option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Metricat</label>
+                <select class="form-select form-select-sm" data-control="select2" data-close-on-select="false" data-placeholder="Zgjedh opsionin/opsionet" 
+                    data-allow-clear="true" multiple="multiple">
+                    <option></option>
+                    <option value="1">accuracy</option>
+                    <option value="2">precision</option>
+                    <option value="2">recall</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Ndarja e validimit</label>
+                <input type="number" class="form-control form-control-sm" maxlength="30" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Shkalla e braktisjes</label>
+                <input type="number" class="form-control form-control-sm" maxlength="30" />
+            </div>
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Ndalimi i hershëm</label>
+                <input type="number" class="form-control form-control-sm" maxlength="30" />
+            </div>
+            <div class="col-md-3 col-sm-6 form-group mt-5">
+                <label class="required form-label">Parametrat e programuesit të normës së mësimit</label>
+                <input type="number" class="form-control form-control-sm" maxlength="30" />
             </div>
         </div>
     </div>
-</form>
+    <div class="card-footer">
+        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Ruaj parametrat</button>
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Reseto të dhënat</button>
+    </div>
+</div>
+
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
