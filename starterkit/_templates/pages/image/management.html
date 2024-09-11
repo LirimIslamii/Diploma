@@ -9,97 +9,190 @@
 <div class="card shadow-sm">
     <div class="card-header">
         <h3 class="card-title fs-6">Cakto parametrat e modelit sipas nevojës së imazhit</h3>
-        <div class="card-toolbar">
-            <button type="button" class="btn btn-sm btn-light">
-                Action
-            </button>
+    </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 form-group">
+                    <label class="required form-label">Learning Rate</label>
+                    <input type="float" name="learning_rate" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 col-sm-6 form-group">
+                    <label class="required form-label">Number of Epochs</label>
+                    <input type="number" name="num_epochs" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 col-sm-6 form-group">
+                    <label class="required form-label">Kernel Size</label>
+                    <input type="text" name="kernel_size" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 col-sm-6 form-group">
+                    <label class="required form-label">Optimizer</label>
+                    <select name="optimizer" class="form-select form-select-sm" data-control="select2"
+                        data-placeholder="Zgjedh një opsion">
+                        <option></option>
+                        <option value="SGD">SGD</option>
+                        <option value="Adam">Adam</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Metrics</label>
+                    <select name="metrics" class="form-select form-select-sm" data-control="select2"
+                        data-placeholder="Zgjedh opsionin/opsionet" multiple="multiple">
+                        <option value="accuracy">accuracy</option>
+                        <option value="precision">precision</option>
+                        <option value="recall">recall</option>
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Batch Size</label>
+                    <input type="number" name="batch_size" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Number of Kernels</label>
+                    <input type="number" name="num_kernels" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Validation Split</label>
+                    <input type="number" name="validation_split" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Metrics</label>
+                    <select name="lr_scheduler_params" class="form-select form-select-sm" data-control="select2"
+                        data-placeholder="Zgjedh opsionin">
+                        <option></option>
+                        <option value="accuracy">val_loss</option>
+                        <option value="precision">val_accuracy</option>
+                        <option value="recall">accuracy</option>
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Early Stopping</label><br />
+                    <input type="checkbox" name="early_stopping" class="form-check-input mt-1" />
+                </div>
+            </div>
         </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-sm btn-primary">Ruaj parametrat</button>
+            <button type="button" class="btn btn-sm btn-light" onclick="this.form.reset();">Reseto të dhënat</button>
+        </div>
+    </form>
+</div>
+
+<div class="card mt-5">
+    <div class="card-header">
+        <h3 class="card-title fs-6">Parametrat e konfigurimit</h3>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-md-3 col-sm-6 form-group">
-                <label class="required form-label">Shkalla e të mësuarit</label>
-                <input type="number" class="form-control form-control-sm" maxlength="100" />
-            </div>
-            <div class="col-md-3 col-sm-6 form-group">
-                <label class="required form-label">Numri i epokave</label>
-                <input type="number" class="form-control form-control-sm" maxlength="100" />
-            </div>
-            <div class="col-md-3 col-sm-6 form-group">
-                <label class="required form-label">Madhësia e grupit</label>
-                <input type="number" class="form-control form-control-sm" maxlength="50" />
-            </div>
-            <div class="col-md-3 col-sm-6 form-group">
-                <label class="required form-label">Numri i kernelëve</label>
-                <input type="number" class="form-control form-control-sm" maxlength="30" />
+        <div class="card-body pt-3">
+            <div class="mb-0">
+                <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-6 gy-4 mb-0">
+                        <thead>
+                            <tr
+                                class="border-bottom border-gray-200 text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                                <th class="min-w-150px">Parametri</th>
+                                <th class="min-w-125px">Vlera</th>
+                                <th class="min-w-125px">Përshkrimi</th>
+                                <th class="min-w-125px">Rangu i rekomanduar</th>
+                                <th class="text-end min-w-70px">Data e regjistrimit</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fw-semibold text-gray-700">
+                            {% for config in configs %}
+                            <tr>
+                                <td class="fs-6">Learning Rate</td>
+                                <td>{{ config.learning_rate }}</td>
+                                <td class="fs-6">Përcakton se sa janë përditësuar peshat e rrjetit gjatë trajnimit.</td>
+                                <td><span class="badge badge-light-success">0.001 - 0.1</span></td>
+                                <td class="text-end">{{ config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Number of Epochs</td>
+                                <td>{{ config.num_epochs }}</td>
+                                <td class="fs-6">Numri i herëve që i gjithë grupi i të dhënave të trajnimit kalon
+                                    përpara dhe prapa përmes rrjetit.</td>
+                                <td><span class="badge badge-light-success">1 - 100</span></td>
+                                <td class="text-end">{{ config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Kernel Size</td>
+                                <td>{{ config.kernel_size }}</td>
+                                <td class="fs-6">Madhësia e matricës së filtrit për shtresat e konvolucionit.</td>
+                                <td><span class="badge badge-light-success">3x3, 5x5</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Optimizer</td>
+                                <td>{{ config.optimizer }}</td>
+                                <td class="fs-6">Metoda e përdorur për përditësimin e peshave në rrjet.</td>
+                                <td><span class="badge badge-light-success">SGD, Adam, RMSprop</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Metrics</td>
+                                <td>{{ config.metrics }}</td>
+                                <td class="fs-6">Metrikat e vlerësimit të performancës.</td>
+                                <td><span class="badge badge-light-success">accuracy, precision, recall</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Batch Size</td>
+                                <td>{{ config.batch_size }}</td>
+                                <td class="fs-6">Numri i mostrave të përpunuara përpara se modeli të përditësohet.</td>
+                                <td><span class="badge badge-light-success">16 - 128</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Number of Kernels</td>
+                                <td>{{ config.num_kernels }}</td>
+                                <td class="fs-6">Numri i filtrave në shtresat konvolucionale.</td>
+                                <td><span class="badge badge-light-success">32-512</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Validation Split</td>
+                                <td>{{ config.validation_split }}</td>
+                                <td class="fs-6">Pjesa e të dhënave të trajnimit që do të përdoren si të dhëna
+                                    vërtetimi.</td>
+                                <td><span class="badge badge-light-success">0.1 - 0.5</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Learning Rate Scheduler Parameters</td>
+                                <td>{{ config.lr_scheduler_params }}</td>
+                                <td class="fs-6">Përshtatjet në shkallën e të mësuarit gjatë epokave të trajnimit..</td>
+                                <td><span class="badge badge-light-success">val_loss, val_accuracy, apo accuracy</span>
+                                </td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fs-6">Early Stopping</td>
+                                <td><span class="badge badge-light-success">{{ config.early_stopping|yesno:"Po,Jo" }}</span>
+                                <td class="fs-6">Një metodë për të ndaluar trajnimin kur një metrikë e monitoruar ka
+                                    ndaluar së përmirësuari.</td>
+                                <td><span class="badge badge-light-success">Po, Jo</span></td>
+                                <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Madhësia e kernelit</label>
-                <input type="number" class="form-control form-control-sm" maxlength="30" />
-            </div>
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Optimizuesi</label>
-                <select class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion">
-                    <option></option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                </select>
-            </div>
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Metricat</label>
-                <select class="form-select form-select-sm" data-control="select2" data-close-on-select="false" data-placeholder="Zgjedh opsionin/opsionet" 
-                    data-allow-clear="true" multiple="multiple">
-                    <option></option>
-                    <option value="1">accuracy</option>
-                    <option value="2">precision</option>
-                    <option value="2">recall</option>
-                </select>
-            </div>
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Ndarja e validimit</label>
-                <input type="number" class="form-control form-control-sm" maxlength="30" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Shkalla e braktisjes</label>
-                <input type="number" class="form-control form-control-sm" maxlength="30" />
-            </div>
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Ndalimi i hershëm</label>
-                <input type="number" class="form-control form-control-sm" maxlength="30" />
-            </div>
-            <div class="col-md-3 col-sm-6 form-group mt-5">
-                <label class="required form-label">Parametrat e programuesit të normës së mësimit</label>
-                <input type="number" class="form-control form-control-sm" maxlength="30" />
-            </div>
-        </div>
-    </div>
-    <div class="card-footer">
-        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Ruaj parametrat</button>
-        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Reseto të dhënat</button>
     </div>
 </div>
 
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        new Dropzone("#kt_dropzonejs_example_1", {
-            url: "https://keenthemes.com/scripts/void.php",
-            paramName: "file",
-            maxFiles: 10,
-            maxFilesize: 10, // MB
-            addRemoveLinks: true,
-            accept: function (file, done) {
-                if (file.name == "wow.jpg") {
-                    done("Naha, you don't.");
-                } else {
-                    done();
-                }
-            }
+        document.querySelector('button[type="button"]').addEventListener('click', function () {
+            this.form.reset();
+            $('.form-select').val(null).trigger('change');
+            tooltipSlider.noUiSlider.set(0.001); 
         });
     });
 </script>
