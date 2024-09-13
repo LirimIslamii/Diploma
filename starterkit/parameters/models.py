@@ -16,4 +16,4 @@ class ModelConfig(models.Model):
     inserted_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Config {self.id} - Optimizer: {self.optimizer}"
+        return self.name

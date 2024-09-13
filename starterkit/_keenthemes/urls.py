@@ -21,8 +21,8 @@ from _keenthemes.views import SystemView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dashboards.urls')),
-    path('pages/', include('image.urls')),
-    path('pages/', include('analysis.urls')),
+    path('pages/', include('parameters.urls')),
+    path('pages/', include('uploadDataset.urls')),
     path('pages/', include('model.urls')),
     path('pages/', include('visualization.urls')),
     path('pages/', include('research.urls')),

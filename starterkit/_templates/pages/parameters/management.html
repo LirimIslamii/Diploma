@@ -10,7 +10,7 @@
     <div class="card-header">
         <h3 class="card-title fs-6">Cakto parametrat e modelit sipas nevojës së imazhit</h3>
     </div>
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form action="" method="POST" id="kt_register" class="form" data-kt-redirect-url="/" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="card-body">
             <div class="row">
@@ -77,8 +77,8 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" class="btn btn-sm btn-primary">Ruaj parametrat</button>
-            <button type="button" class="btn btn-sm btn-light" onclick="this.form.reset();">Reseto të dhënat</button>
+            <button type="submit" id="kt_register_submit" class="btn btn-sm btn-primary">Ruaj parametrat</button>
+            <button type="button" id="reset_button" class="btn btn-sm btn-light">Reseto të dhënat</button>
         </div>
     </form>
 </div>
@@ -187,14 +187,5 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelector('button[type="button"]').addEventListener('click', function () {
-            this.form.reset();
-            $('.form-select').val(null).trigger('change');
-            tooltipSlider.noUiSlider.set(0.001); 
-        });
-    });
-</script>
-
+<script src="{% static 'js/custom/parameters/index.js' %}"></script>
 {% endblock content %}

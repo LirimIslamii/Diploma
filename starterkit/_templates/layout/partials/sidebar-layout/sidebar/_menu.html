@@ -16,17 +16,40 @@
                 </a>
             </div>
             <div class="menu-item">
-                <a class="menu-link {% active 'management' 'image' %}" href="{% url 'image:management' %}">
+                <a class="menu-link {% active 'management' 'parameters' %}" href="{% url 'parameters:management' %}">
                     <span class="menu-icon">{% getIcon 'setting-4' 'fs-2' %}</span>
                     <span class="menu-title fs-6">Parametrat e modelit</span>
                 </a>
             </div>
-            <div class="menu-item">
-                <a class="menu-link {% active 'tools' 'analysis' %}" href="{% url 'analysis:tools' %}">
+
+            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% menu_active 'upload' %}">
+                <span class="menu-link">
                     <span class="menu-icon">{% getIcon 'chart-line-star' 'fs-2' %}</span>
-                    <span class="menu-title fs-6">Veglat e Analizës</span>
-                </a>
+                    <span class="menu-title fs-6">Menaxhimi i datasetit</span>
+                    <span class="menu-arrow"></span>
+                </span>
+                <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
+                        <a class="menu-link {% active 'upload' 'uploadDataset' %}" href="{% url 'uploadDataset:upload' %}">
+                            <span class="menu-icon">{% getIcon 'file-up' 'fs-2' %}</span>
+                            <span class="menu-title">Ngarko datasetin</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="/metronic8/demo1/pages/user-profile/activity.html">
+                            <span class="menu-icon">{% getIcon 'search-list' 'fs-2' %}</span>
+                            <span class="menu-title">Lista e dataseteve</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="/metronic8/demo1/pages/user-profile/activity.html">
+                            <span class="menu-icon">{% getIcon 'setting-2' 'fs-2' %}</span>
+                            <span class="menu-title">Opsionet e përpunimit të të dhënave</span>
+                        </a>
+                    </div>
+                </div>
             </div>
+
             <div class="menu-item">
                 <a class="menu-link {% active 'insights' 'model' %}" href="{% url 'model:insights' %}">
                     <span class="menu-icon">{% getIcon 'element-1' 'fs-2' %}</span>

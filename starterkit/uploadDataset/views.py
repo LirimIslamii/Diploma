@@ -1,10 +1,10 @@
 from django.views.generic import TemplateView
 from _keenthemes.__init__ import KTLayout
 
-class AnalysisView(TemplateView):
+class UploadDatasetView(TemplateView):
     # Default template file
     # Refer to dashboards/urls.py file for more pages and template files
-    template_name = 'pages/analysis/tools.html'
+    template_name = 'pages/uploadDataset/upload.html'
 
     # Predefined function
     def get_context_data(self, **kwargs):

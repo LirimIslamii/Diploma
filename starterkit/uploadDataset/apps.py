@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
-class ImageConfig(AppConfig):
+class UploadDatasetConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'image'
+    name = 'uploadDataset'
