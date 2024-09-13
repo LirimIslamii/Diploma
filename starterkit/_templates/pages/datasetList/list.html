@@ -1,0 +1,76 @@
+{% extends layout %}
+
+{% load i18n %}
+
+{% block title %}{% translate "Ballina" %}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title fs-6">Lista e datasetëve të ngarkuar në sistem</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="kt_datatable_both_scrolls" class="table table-row-bordered gy-3 gs-3">
+                <thead>
+                    <tr class="fw-semibold fs-6 text-gray-800">
+                        <th>Emri</th>
+                        <th>Përshkrimi</th>
+                        <th>Data e regjistrimit</th>
+                        <th>Veprimet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dataset in datasets %}
+                    <tr>
+                        <td>{{ dataset.name }}</td>
+                        <td>{{ dataset.description|default:"-" }}</td>
+                        <td>{{ dataset.uploaded_at|date:"Y-m-d H:i" }}</td>
+                        <td style="width:13%">
+                            <a href="{{ dataset.file.url }}" class="btn btn-sm btn-secondary" download>Shkarko</a>
+                            <form method="post" class="delete-form" data-dataset-name="{{ dataset.name }}" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="dataset_id" value="{{ dataset.id }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Fshij</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">Nuk është ngarkuar ende asnjë dataset.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#kt_datatable_both_scrolls").DataTable();
+        const deleteForms = document.querySelectorAll('.delete-form');
+        deleteForms.forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); 
+                const datasetName = form.getAttribute('data-dataset-name');
+                Swal.fire({
+                    title: 'A jeni i sigurt?',
+                    text: `Dëshironi të fshini datasetin "${datasetName}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Po, fshije!',
+                    cancelButtonText: 'Anulo'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    })
+</script>
+
+{% endblock content %}

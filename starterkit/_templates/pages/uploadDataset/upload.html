@@ -12,64 +12,92 @@ context.update({
 
 {% block content %}
 
-<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="kt_datatable_zero_configuration" class="table table-row-bordered gy-2">
-                <thead>
-                    <tr class="fw-semibold fs-6 text-muted">
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                    </tr>
-                    <tr>
-                        <td>Garrett Winters</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>63</td>
-                        <td>2011/07/25</td>
-                        <td>$170,750</td>
-                    </tr>
-                    <tr>
-                        <td>Ashton Cox</td>
-                        <td>Junior Technical Author</td>
-                        <td>San Francisco</td>
-                        <td>66</td>
-                        <td>2009/01/12</td>
-                        <td>$86,000</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                    </tr>
-                </tfoot>
-            </table>
+<div class="card card-flush pb-0 bgi-position-y-center bgi-no-repeat mb-10"
+    style="background-size: auto calc(100% + 10rem); background-position-x: 100%; background-image: url('{% static 'media/illustrations/sketchy-1/4.png' %}');">
+    <div class="card-header pt-10">
+        <div class="d-flex align-items-center">
+            <div class="symbol symbol-circle me-5">
+                <div class="symbol-label bg-transparent text-primary border border-secondary border-dashed">
+                    <i class="ki-duotone ki-abstract-47 fs-2x text-primary"><span class="path1"></span><span
+                            class="path2"></span></i>
+                </div>
+            </div>
+            <div class="d-flex flex-column">
+                <h2 class="mb-1">Dataseti</h2>
+                <div class="text-muted fw-bold">
+                    <a href="/pages/uploadDataset">Convolutional neural network</a> <span class="mx-3">|</span> <a
+                        href="/pages/uploadDataset">Ngarkimi i datasetëve</a> <span class="mx-3">|</span> 2.6 GB <span
+                        class="mx-3">|</span> 758 items
+                </div>
+            </div>
         </div>
     </div>
+    <div class="card-body pb-0">
+        <div class="d-flex overflow-auto h-35px mb-2">
+            <button id="kt_drawer_example_basic_button" class="btn btn-sm btn-primary">Mëso rreth datasetit</button>
+            <div id="kt_drawer_example_basic" class="bg-white p-3" data-kt-drawer="true" data-kt-drawer-activate="true"
+                data-kt-drawer-toggle="#kt_drawer_example_basic_button"
+                data-kt-drawer-close="#kt_drawer_example_basic_close" data-kt-drawer-width="500px">
+                Dataset-i është një koleksion i të dhënave të strukturuara ose të pastrukturuara që përdoren për
+                trajnimin dhe testimin e modeleve në fushën e mësimit makinerik dhe inteligjencës artificiale. Ai
+                përmban shembuj të shumtë që ndihmojnë algoritmet të mësojnë modele dhe të bëjnë parashikime të sakta.
+
+                VGG16 është një arkitekturë e rrjetit nervor konvolucional (Convolutional Neural Network - CNN) e
+                zhvilluar nga Grupi Visual Geometry në Universitetin e Oksfordit. Ajo përbëhet nga 16 shtresa të thella
+                dhe është përdorur kryesisht për detyra të klasifikimit të imazheve. VGG16 ka arritur rezultate të larta
+                në konkurset e vizionit kompjuterik si ImageNet dhe është e njohur për thjeshtësinë dhe efektivitetin e
+                saj.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <form class="form" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="fv-row">
+                <div class="dropzone" id="kt_dropzonejs_example_1">
+                    <div class="dz-message needsclick">
+                        <i class="ki-duotone ki-file-up fs-3x text-primary"><span class="path1"></span><span
+                                class="path2"></span></i>
+                        <div class="ms-4">
+                            <h3 class="fs-5 fw-bold text-gray-900 mb-1">Hidhe fajllin këtu ose kliko për ta ngarkuar.
+                            </h3>
+                            <span class="fs-7 fw-semibold text-gray-500">Ngarko deri në 10 fajlla</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="button" id="reset_button" class="btn btn-sm btn-light">Pastro datasetin</button>
+        </div>
+    </form>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         $("#kt_datatable_zero_configuration").DataTable();
+        var csrfToken = '{{ csrf_token }}';
+        var myDropzone = new Dropzone("#kt_dropzonejs_example_1", {
+            url: "{{ request.path }}",
+            paramName: "file",
+            maxFiles: 10,
+            maxFilesize: 200, // MB
+            addRemoveLinks: true,
+            acceptedFiles: ".zip, .rar",
+            uploadMultiple: true,
+            parallelUploads: 10,
+            headers: {
+                "X-CSRFToken": csrfToken
+            }
+        });
+
+        document.getElementById("reset_button").addEventListener("click", function () {
+            myDropzone.removeAllFiles();
+        });
+
     })
 </script>
 {% endblock content %}

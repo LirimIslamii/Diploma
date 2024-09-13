@@ -17,17 +17,22 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from _keenthemes.views import SystemView
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dashboards.urls')),
     path('pages/', include('parameters.urls')),
     path('pages/', include('uploadDataset.urls')),
+    path('pages/', include('datasetList.urls')),
     path('pages/', include('model.urls')),
     path('pages/', include('visualization.urls')),
     path('pages/', include('research.urls')),
     path('auth/', include('auth.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = SystemView.as_view(template_name = 'pages/system/not-found.html', status=404)
 handler500 = SystemView.as_view(template_name = 'pages/system/error.html', status=500)

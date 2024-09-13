@@ -99,7 +99,7 @@ DATABASES = {
         'NAME': 'Diploma',
         'USER': '',
         'PASSWORD': '',
-        'HOST': 'localhost\MSSQLSERVER01',
+        'HOST': 'DESKTOP-RF1BLIG',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'Trusted_Connection': 'yes'
@@ -153,7 +153,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'assets',
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type

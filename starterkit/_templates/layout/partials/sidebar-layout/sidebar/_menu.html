@@ -22,7 +22,7 @@
                 </a>
             </div>
 
-            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% menu_active 'upload' %}">
+            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% menu_active 'upload' 'list' %}">
                 <span class="menu-link">
                     <span class="menu-icon">{% getIcon 'chart-line-star' 'fs-2' %}</span>
                     <span class="menu-title fs-6">Menaxhimi i datasetit</span>
@@ -36,7 +36,7 @@
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a class="menu-link" href="/metronic8/demo1/pages/user-profile/activity.html">
+                        <a class="menu-link {% active 'list' 'datasetList' %}" href="{% url 'datasetList:list' %}">
                             <span class="menu-icon">{% getIcon 'search-list' 'fs-2' %}</span>
                             <span class="menu-title">Lista e dataseteve</span>
                         </a>
