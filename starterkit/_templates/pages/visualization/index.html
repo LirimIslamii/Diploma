@@ -91,7 +91,7 @@ context.update({
                                 </div>
                                     <div class="col-md-3 col-sm-6 form-group">
                                         <label class="required form-label">Optimizer</label>
-                                        <select name="optimizer" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion" disabled>
+                                        <select name="optimizer" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion" >
                                             <option></option>
                                             <option value="SGD" {% if optimizer == "SGD" %}selected{% endif %}>SGD</option>
                                             <option value="Adam" {% if optimizer == "Adam" %}selected{% endif %}>Adam</option>
@@ -101,7 +101,7 @@ context.update({
                                 <div class="row mt-5">
                                     <div class="col-md-3 col-sm-6 form-group">
                                         <label class="required form-label">Metrics</label>
-                                        <select name="metrics" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh opsionin" disabled>
+                                        <select name="metrics" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh opsionin">
                                             <option></option>
                                             <option value="accuracy" {% if metrics|lower == "accuracy" %}selected{% endif %}>accuracy</option>
                                             <option value="precision" {% if metrics|lower == "precision" %}selected{% endif %}>precision</option>
@@ -129,7 +129,7 @@ context.update({
                                 <div class="row mt-5">
                                     <div class="col-md-3 col-sm-6 form-group">
                                         <label class="required form-label">Validation metrics</label>
-                                        <select name="lr_scheduler_params" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh opsionin" disabled>
+                                        <select name="lr_scheduler_params" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh opsionin">
                                             <option></option>
                                             <option value="val_loss" {% if lr_scheduler_params|lower == "val_loss" %}selected{% endif %}>val_loss</option>
                                             <option value="val_accuracy" {% if lr_scheduler_params|lower == "val_accuracy" %}selected{% endif %}>val_accuracy</option>
@@ -138,7 +138,7 @@ context.update({
                                     </div>
                                     <div class="col-md-3 col-sm-6 form-group">
                                         <label class="required form-label">Early Stopping</label><br />
-                                        <input type="checkbox" name="early_stopping" class="form-check-input mt-1" {% if early_stopping %}checked{% endif %} disabled/>
+                                        <input type="checkbox" name="early_stopping" class="form-check-input mt-1" {% if early_stopping %}checked{% endif %}/>
                                     </div>                                    
                                 </div>
                     </div>
@@ -159,7 +159,7 @@ context.update({
                             Përdorni Burimet Premium
                         </span>
 
-                        <input class="form-check-input" type="checkbox" checked="checked" value="">
+                        <input class="form-check-input" type="checkbox" checked="checked" name="use_premium">
                     </label>
                     <label
                         class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack mb-5">
@@ -185,7 +185,7 @@ context.update({
                             <a href="#" class="btn btn-light btn-active-light-primary w-100">Shkarko</a>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100"><i
+                    <button type="submit" class="btn btn-primary w-100" onclick="fetchTrainingProgress()"><i
                             class="ki-duotone ki-triangle fs-3"><span class="path1"></span><span
                                 class="path2"></span><span class="path3"></span></i> Fillo trajnimin
                     </button>
@@ -196,36 +196,57 @@ context.update({
 </form>
 </div>
 
+<div id="training-info">
+    <p>Epoch: <span id="epoch">Waiting for data...</span></p>
+    <p>Loss: <span id="loss">Waiting for data...</span></p>
+    <p>Accuracy: <span id="accuracy">Waiting for data...</span></p>
+    <p>Validation Loss: <span id="val_loss">Waiting for data...</span></p>
+    <p>Validation Accuracy: <span id="val_accuracy">Waiting for data...</span></p>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         $("#kt_datepicker_2").flatpickr();
-    })
+        function fetchTrainingProgress() {
+            fetch("/get-training-progress/")
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Progresi i marrë nga serveri:", data);  // Kontrollo të dhënat e marra
+                    updateTrainingProgress(data);
+                })
+                .catch(error => console.error('Error fetching training progress:', error));
+        }
+    });    
 </script>
 
+
+
+
+
 <style>
-[data-bs-theme="light"] .select2-selection.select2-selection--single:not(.form-select-solid) {
-    background-color: white !important;
-    color: #333 !important;
-    border-color: #ddd !important;
-    opacity: 1 !important;
-}
+    [data-bs-theme="light"] .select2-selection.select2-selection--single:not(.form-select-solid) {
+        background-color: white !important;
+        color: #333 !important;
+        border-color: #ddd !important;
+        opacity: 1 !important;
+    }
 
-[data-bs-theme="dark"] .select2-selection.select2-selection--single:not(.form-select-solid) {
-    background-color: #1C1C1C !important;  
-    color: #fff !important;             
-    border-color: #555 !important; 
-}
+    [data-bs-theme="dark"] .select2-selection.select2-selection--single:not(.form-select-solid) {
+        background-color: #1C1C1C !important;
+        color: #fff !important;
+        border-color: #555 !important;
+    }
 
-[data-bs-theme="light"] input[type="checkbox"][disabled] {
-    opacity: 1 !important;
-    cursor: not-allowed !important;
-}
+    [data-bs-theme="light"] input[type="checkbox"][disabled] {
+        opacity: 1 !important;
+        cursor: not-allowed !important;
+    }
 
-[data-bs-theme="dark"] input[type="checkbox"][disabled] {
-    opacity: 1 !important;
-    background-color: #1C1C1C !important;
-    cursor: not-allowed !important;
-}
+    [data-bs-theme="dark"] input[type="checkbox"][disabled] {
+        opacity: 1 !important;
+        background-color: #1C1C1C !important;
+        cursor: not-allowed !important;
+    }
 </style>
 
 {% endblock content %}

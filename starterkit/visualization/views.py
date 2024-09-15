@@ -15,7 +15,7 @@ import os
 import shutil
 import rarfile
 from django.conf import settings
-
+from tensorflow.keras.callbacks import Callback
 
 class VisualisationView(TemplateView):
     template_name = "pages/visualization/index.html"
@@ -53,7 +53,9 @@ class VisualisationView(TemplateView):
         early_stopping = request.POST.get("early_stopping") == "on"
         lr_scheduler_params = request.POST.get("lr_scheduler_params")
         dataset = request.POST.get("dataset")
+        use_premium = request.POST.get("use_premium")
         self.train_vgg16_model(
+            request,
             learning_rate,
             num_epochs,
             kernel_size,
@@ -65,12 +67,14 @@ class VisualisationView(TemplateView):
             early_stopping,
             lr_scheduler_params,
             dataset,
+            use_premium
         )
 
         return render(request, self.template_name, self.get_context_data())
 
     def train_vgg16_model(
         self,
+        request,
         learning_rate,
         num_epochs,
         kernel_size,
@@ -82,8 +86,8 @@ class VisualisationView(TemplateView):
         early_stopping,
         lr_scheduler_params,
         dataset,
+        use_premium
     ):
-
         dataset_basename = os.path.basename(dataset)
         dataset_name_without_extension = os.path.splitext(dataset_basename)[0] 
 
@@ -107,22 +111,31 @@ class VisualisationView(TemplateView):
             with rarfile.RarFile(dataset_absolute_path, "r") as rar_ref:
                 rar_ref.extractall(train_dir)
                 rar_ref.extractall(val_dir)
+        
+        if use_premium:
+            batch_size = batch_size * 2
+            num_epochs = num_epochs * 2  
 
-                kernel_size_tuple = tuple(map(int, kernel_size.split("x")))
-                base_model = VGG16(weights="imagenet", include_top=False, input_shape=(224, 224, 3))
+        # Optionally, use a more complex model by adding more filters
+        num_kernels = num_kernels * 2
 
-                for layer in base_model.layers:
-                    layer.trainable = False
+        # Move model creation outside of the extraction block
+        kernel_size_tuple = tuple(map(int, kernel_size.split("x")))
+        base_model = VGG16(weights="imagenet", include_top=False, input_shape=(224, 224, 3))
 
-            x = base_model.output
-            x = Conv2D(filters=num_kernels, kernel_size=kernel_size_tuple, activation="relu")(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Flatten()(x)
-            x = Dense(num_kernels, activation="relu")(x)
-            predictions = Dense(10, activation="softmax")(x)
+        for layer in base_model.layers:
+            layer.trainable = False
 
-            model = Model(inputs=base_model.input, outputs=predictions)
+        x = base_model.output
+        x = Conv2D(filters=num_kernels, kernel_size=kernel_size_tuple, activation="relu")(x)
+        x = MaxPooling2D(pool_size=(2, 2))(x)
+        x = Flatten()(x)
+        x = Dense(num_kernels, activation="relu")(x)
+        predictions = Dense(10, activation="softmax")(x)
 
+        model = Model(inputs=base_model.input, outputs=predictions)
+
+        # Choose the optimizer
         if optimizer_name == "Adam":
             optimizer = Adam(learning_rate=float(learning_rate))
         elif optimizer_name == "SGD":
@@ -132,35 +145,35 @@ class VisualisationView(TemplateView):
 
         model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=[metrics])
 
-        callbacks = []
-        if early_stopping:
-            callbacks.append(
-                EarlyStopping(
-                    monitor=lr_scheduler_params, patience=5, restore_best_weights=True
-                )
-            )
+        # Set up callbacks
+        callbacks = [
+            EarlyStopping(
+                monitor=lr_scheduler_params, patience=5, restore_best_weights=True
+            ),
+            BatchEndCallback(request)
+        ]
 
-        train_datagen = ImageDataGenerator(rescale=1.0 / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
+        # Use ImageDataGenerator with validation split
+        train_datagen = ImageDataGenerator(rescale=1.0 / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True, validation_split=validation_split)
 
-        validation_datagen = ImageDataGenerator(rescale=1.0 / 255)
-
+        # Train generator
         train_generator = train_datagen.flow_from_directory(
             train_dir,
             target_size=(224, 224),
             batch_size=batch_size,
             class_mode="sparse",
-            validation_split=validation_split 
         )
 
-        validation_generator = validation_datagen.flow_from_directory(
+        # Validation generator
+        validation_generator = train_datagen.flow_from_directory(
             val_dir,
             target_size=(224, 224),
             batch_size=batch_size,
             class_mode="sparse",
-            validation_split=validation_split
         )
 
-        model.fit(
+        # Train the model
+        history = model.fit(
             train_generator,
             steps_per_epoch=train_generator.samples // batch_size,
             epochs=num_epochs,
@@ -168,5 +181,39 @@ class VisualisationView(TemplateView):
             validation_steps=validation_generator.samples // batch_size,
             callbacks=callbacks,
         )
+        
+        for epoch in range(num_epochs):
+            if 'loss' in history.history:
+                current_loss = history.history['loss'][epoch]
+                current_accuracy = history.history['accuracy'][epoch]
+                current_val_loss = history.history['val_loss'][epoch]
+                current_val_accuracy = history.history['val_accuracy'][epoch]
+            
+                request.session['training_progress'] = {
+                    'epoch': epoch + 1,
+                    'loss': str(current_loss),
+                    'accuracy': str(current_accuracy),
+                    'val_loss': str(current_val_loss),
+                    'val_accuracy': str(current_val_accuracy)
+                }
+                request.session.modified = True
 
-        model.save(f"vgg16_trained_on_{dataset}.h5")
+        model.save(f"vgg16_trained_on.h5")
+
+class BatchEndCallback(Callback):
+    def __init__(self, request):
+        self.request = request
+
+    def on_batch_end(self, batch, logs=None):
+        logs = logs or {}
+        self.request.session['training_progress'] = {
+            'batch': batch + 1,
+            'loss': f"{logs.get('loss', 'n/a'):.4f}",
+            'accuracy': f"{logs.get('accuracy', 'n/a'):.4f}",
+            'val_loss': f"{logs.get('val_loss', 'n/a'):.4f}",
+            'val_accuracy': f"{logs.get('val_accuracy', 'n/a'):.4f}"
+        }
+        print(f"Progresi për batch-in {batch + 1}: {self.request.session['training_progress']}")
+        self.request.session.modified = True
+        self.request.session.save()
+
