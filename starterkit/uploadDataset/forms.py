@@ -1,9 +1,9 @@
 from django import forms
-from .models import ModelConfig
+from .models import UploadModelConfig
 
 class DatasetForm(forms.ModelForm):
     class Meta:
-        model = ModelConfig
+        model = UploadModelConfig
         fields = ['name', 'file', 'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),

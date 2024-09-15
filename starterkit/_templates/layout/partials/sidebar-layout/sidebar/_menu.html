@@ -22,7 +22,7 @@
                 </a>
             </div>
 
-            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% menu_active 'upload' 'list' %}">
+            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {% menu_active 'upload' 'list' 'result' %}">
                 <span class="menu-link">
                     <span class="menu-icon">{% getIcon 'chart-line-star' 'fs-2' %}</span>
                     <span class="menu-title fs-6">Menaxhimi i datasetit</span>
@@ -41,25 +41,12 @@
                             <span class="menu-title">Lista e dataseteve</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a class="menu-link" href="/metronic8/demo1/pages/user-profile/activity.html">
-                            <span class="menu-icon">{% getIcon 'setting-2' 'fs-2' %}</span>
-                            <span class="menu-title">Opsionet e përpunimit të të dhënave</span>
-                        </a>
-                    </div>
                 </div>
-            </div>
-
-            <div class="menu-item">
-                <a class="menu-link {% active 'insights' 'model' %}" href="{% url 'model:insights' %}">
-                    <span class="menu-icon">{% getIcon 'element-1' 'fs-2' %}</span>
-                    <span class="menu-title fs-6">Insightet e Modelit</span>
-                </a>
             </div>
             <div class="menu-item">
                 <a class="menu-link {% active 'index' 'visualization' %}" href="{% url 'visualization:index' %}">
                     <span class="menu-icon">{% getIcon 'chart-pie-3' 'fs-2' %}</span>
-                    <span class="menu-title fs-6">Vizualizime</span>
+                    <span class="menu-title fs-6">Trajnimi i modelit</span>
                 </a>
             </div>
             <div class="menu-item">

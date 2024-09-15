@@ -8,10 +8,224 @@ context.update({
 
 {% load i18n %}
 
-{% block title %}{% translate "Vizualizime" %}{% endblock %}
+{% block title %}{% translate "Trajnimi i modelit" %}{% endblock %}
 
 {% block content %}
 
-<div>Lirim Islami</div>
+<div class="d-flex flex-column flex-lg-row">
+    <div class="flex-lg-row-fluid mb-10 mb-lg-0 me-lg-7 me-xl-10">
+        <div class="card">
+            <div class="card-body p-12">
+                <form action="" id="kt_train_model" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column align-items-start flex-xxl-row">
+                        <div class="d-flex align-items-center flex-equal fw-row me-4 order-2" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                            data-bs-original-title="Specify invoice date" data-kt-initialized="1">
+                            <div class="fs-6 fw-bold text-gray-700 text-nowrap">Zgjedh datasetin:</div>
+                            <div class="position-relative d-flex align-items-center w-150px">
+                                <select name="dataset" class="form-select form-select-solid form-select-sm" data-control="select2"
+                                    data-placeholder="Zgjedh një opsion">
+                                    <option></option>
+                                    {% for dataset in datasets %}
+                                    <option value="{{ dataset.file.url }}">{{ dataset.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-center flex-equal fw-row text-nowrap order-1 order-xxl-2 me-4"
+                            data-bs-toggle="tooltip" data-bs-trigger="hover"
+                            data-bs-original-title="Enter invoice number" data-kt-initialized="1">
+                            <span class="fs-2x fw-bold text-gray-800">Trajno modelin</span>
+                            <input type="text" class="form-control form-control-flush fw-bold text-muted fs-3 w-125px"
+                                value="v1.0" placehoder="...">
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end flex-equal order-3 fw-row"
+                            data-bs-toggle="tooltip" data-bs-trigger="hover"
+                            data-bs-original-title="Specify invoice due date" data-kt-initialized="1">
+                            <div class="fs-6 fw-bold text-gray-700 text-nowrap">Trajnim i planifikuar:</div>
+                            <div class="position-relative d-flex align-items-center w-150px">
+                                <div class="mb-0">
+                                    <input class="form-control form-control-sm form-control-solid"
+                                        placeholder="Zgjedh datën" id="kt_datepicker_2" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="separator separator-dashed my-10"></div>
+                    <div class="mb-0">
+                        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed mb-9 p-6">
+                            <span class="svg-icon svg-icon-3tx svg-icon-primary me-4">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"></rect>
+                                    <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"></rect>
+                                    <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"></rect>
+                                </svg>
+                            </span>
+                            <div class="d-flex flex-stack flex-grow-1">
+                                <div class="fw-bold">
+                                    <h4 class="text-gray-800 fw-bolder fs-5">Informatë!</h4>
+                                    <div class="fs-6 text-gray-600">
+                                        <div class="d-flex flex-column">
+                                            <div class="alert-text fs-6">
+                                                Parametrat e modelit mund të ndryshohen në menynë 
+                                                <a href="/pages/parameters"><b>Parametrat e modelit.</b></a>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 form-group">
+                                    <label class="required form-label">Learning Rate</label>
+                                    <input type="float" name="learning_rate" class="form-control form-control-sm" readonly
+                                        value="{{ learning_rate }}" />
+                                </div>
+                                <div class="col-md-3 col-sm-6 form-group">
+                                    <label class="required form-label">Number of Epochs</label>
+                                    <input type="number" name="num_epochs" class="form-control form-control-sm" readonly value="{{ num_epochs }}" />
+                                </div>
+                                <div class="col-md-3 col-sm-6 form-group">
+                                    <label class="required form-label">Kernel Size</label>
+                                    <input type="text" name="kernel_size" class="form-control form-control-sm" readonly value="{{ kernel_size }}" />
+                                </div>
+                                    <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Optimizer</label>
+                                        <select name="optimizer" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion" disabled>
+                                            <option></option>
+                                            <option value="SGD" {% if optimizer == "SGD" %}selected{% endif %}>SGD</option>
+                                            <option value="Adam" {% if optimizer == "Adam" %}selected{% endif %}>Adam</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Metrics</label>
+                                        <select name="metrics" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh opsionin" disabled>
+                                            <option></option>
+                                            <option value="accuracy" {% if metrics|lower == "accuracy" %}selected{% endif %}>accuracy</option>
+                                            <option value="precision" {% if metrics|lower == "precision" %}selected{% endif %}>precision</option>
+                                            <option value="recall" {% if metrics|lower == "recall" %}selected{% endif %}>recall</option>
+                                        </select>
+                                        
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Batch Size</label>
+                                        <input type="number" name="batch_size" class="form-control form-control-sm" readonly
+                                            value="{{ batch_size }}" />
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Number of Kernels</label>
+                                        <input type="number" name="num_kernels" class="form-control form-control-sm" readonly
+                                            value="{{ num_kernels }}" />
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Validation Split</label>
+                                        <input type="number" name="validation_split" readonly
+                                            class="form-control form-control-sm" value="{{ validation_split }}" />
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5">
+                                    <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Validation metrics</label>
+                                        <select name="lr_scheduler_params" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh opsionin" disabled>
+                                            <option></option>
+                                            <option value="val_loss" {% if lr_scheduler_params|lower == "val_loss" %}selected{% endif %}>val_loss</option>
+                                            <option value="val_accuracy" {% if lr_scheduler_params|lower == "val_accuracy" %}selected{% endif %}>val_accuracy</option>
+                                            <option value="accuracy" {% if lr_scheduler_params|lower == "accuracy" %}selected{% endif %}>accuracy</option>
+                                        </select>                                        
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 form-group">
+                                        <label class="required form-label">Early Stopping</label><br />
+                                        <input type="checkbox" name="early_stopping" class="form-check-input mt-1" {% if early_stopping %}checked{% endif %} disabled/>
+                                    </div>                                    
+                                </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-lg-auto min-w-lg-300px">
+        <div class="card" data-kt-sticky="true" data-kt-sticky-name="invoice"
+            data-kt-sticky-offset="{default: false, lg: '200px'}" data-kt-sticky-width="{lg: '250px', lg: '300px'}"
+            data-kt-sticky-left="auto" data-kt-sticky-top="150px" data-kt-sticky-animation="false"
+            data-kt-sticky-zindex="95">
+            <div class="card-body p-10">
+                <div class="separator separator-dashed mb-8"></div>
+                <div class="mb-8">
+                    <label
+                        class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack mb-5">
+                        <span class="form-check-label ms-0 fw-bold fs-6 text-gray-700">
+                            Përdorni Burimet Premium
+                        </span>
+
+                        <input class="form-check-input" type="checkbox" checked="checked" value="">
+                    </label>
+                    <label
+                        class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack mb-5">
+                        <span class="form-check-label ms-0 fw-bold fs-6 text-gray-700">
+                            Trajnime prioritare / Orari
+                        </span>
+                        <input class="form-check-input" type="checkbox" value="">
+                    </label>
+                    <label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">
+                        <span class="form-check-label ms-0 fw-bold fs-6 text-gray-700">
+                            Shënime Trajnimi
+                        </span>
+                        <input class="form-check-input" type="checkbox" value="">
+                    </label>
+                </div>
+                <div class="separator separator-dashed mb-8"></div>
+                <div class="mb-0">
+                    <div class="row mb-5">
+                        <div class="col">
+                            <a href="#" class="btn btn-light btn-active-light-primary w-100">Rishiko</a>
+                        </div>
+                        <div class="col">
+                            <a href="#" class="btn btn-light btn-active-light-primary w-100">Shkarko</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i
+                            class="ki-duotone ki-triangle fs-3"><span class="path1"></span><span
+                                class="path2"></span><span class="path3"></span></i> Fillo trajnimin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#kt_datepicker_2").flatpickr();
+    })
+</script>
+
+<style>
+[data-bs-theme="light"] .select2-selection.select2-selection--single:not(.form-select-solid) {
+    background-color: white !important;
+    color: #333 !important;
+    border-color: #ddd !important;
+    opacity: 1 !important;
+}
+
+[data-bs-theme="dark"] .select2-selection.select2-selection--single:not(.form-select-solid) {
+    background-color: #1C1C1C !important;  
+    color: #fff !important;             
+    border-color: #555 !important; 
+}
+
+[data-bs-theme="light"] input[type="checkbox"][disabled] {
+    opacity: 1 !important;
+    cursor: not-allowed !important;
+}
+
+[data-bs-theme="dark"] input[type="checkbox"][disabled] {
+    opacity: 1 !important;
+    background-color: #1C1C1C !important;
+    cursor: not-allowed !important;
+}
+</style>
 
 {% endblock content %}

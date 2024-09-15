@@ -1,6 +1,6 @@
 from django.db import models
 
-class ModelConfig(models.Model):
+class UploadModelConfig(models.Model):
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to='datasets/')
     description = models.TextField(blank=True, null=True)

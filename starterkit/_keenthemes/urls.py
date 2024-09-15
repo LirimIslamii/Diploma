@@ -25,6 +25,7 @@ urlpatterns = [
     path('pages/', include('parameters.urls')),
     path('pages/', include('uploadDataset.urls')),
     path('pages/', include('datasetList.urls')),
+    path('pages/', include('optionsDataset.urls')),
     path('pages/', include('model.urls')),
     path('pages/', include('visualization.urls')),
     path('pages/', include('research.urls')),

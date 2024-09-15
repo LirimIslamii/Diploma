@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-class ModelConfig(models.Model):
+class ParamsModelConfig(models.Model):
     learning_rate = models.FloatField()
     num_epochs = models.IntegerField()
     kernel_size = models.CharField(max_length=10)

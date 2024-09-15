@@ -1,0 +1,77 @@
+{% extends layout %}
+
+{% load i18n %}
+
+{% block title %}{% translate "Ngarko datasetin" %}{% endblock %}
+
+{% block content %}
+
+<form action="/submit-data-processing-options" method="post">
+    <!-- Data Cleaning and Preparation -->
+    <div class="form-group">
+        <label for="dataCleaning">Data Cleaning Options:</label>
+        <select id="dataCleaning" name="dataCleaning">
+            <option value="remove_duplicates">Remove Duplicates</option>
+            <option value="handle_missing">Handle Missing Values</option>
+            <option value="correct_errors">Correct Errors</option>
+            <option value="convert_formats">Convert Data Formats</option>
+        </select>
+    </div>
+
+    <!-- Feature Engineering -->
+    <div class="form-group">
+        <label for="featureEngineering">Feature Engineering Techniques:</label>
+        <select id="featureEngineering" name="featureEngineering">
+            <option value="normalization">Normalization</option>
+            <option value="scaling">Scaling</option>
+            <option value="decomposition">Decomposition Techniques</option>
+            <option value="feature_selection">Feature Extraction and Selection</option>
+        </select>
+    </div>
+
+    <!-- Data Augmentation -->
+    <div class="form-group">
+        <label for="dataAugmentation">Data Augmentation Methods:</label>
+        <select id="dataAugmentation" name="dataAugmentation">
+            <option value="rotation">Image Rotations</option>
+            <option value="flipping">Flipping</option>
+            <option value="zoom">Zooming</option>
+            <option value="color_change">Color Changes</option>
+        </select>
+    </div>
+
+    <!-- Data Splitting -->
+    <div class="form-group">
+        <label for="dataSplitting">Data Split Ratio (Training : Validation : Testing):</label>
+        <input type="text" id="dataSplitting" name="dataSplitting" placeholder="e.g., 60:20:20">
+    </div>
+
+    <!-- Data Normalization/Standardization -->
+    <div class="form-group">
+        <label for="dataNormalization">Data Normalization/Standardization:</label>
+        <select id="dataNormalization" name="dataNormalization">
+            <option value="standard_scaling">Standard Scaling</option>
+            <option value="min_max">Min-Max Normalization</option>
+            <option value="z_score">Z-Score Normalization</option>
+        </select>
+    </div>
+
+    <!-- Label Encoding -->
+    <div class="form-group">
+        <label for="labelEncoding">Label Encoding Methods:</label>
+        <select id="labelEncoding" name="labelEncoding">
+            <option value="one_hot">One-Hot Encoding</option>
+            <option value="label_encode">Label Encoding</option>
+        </select>
+    </div>
+
+    <!-- Batch Processing -->
+    <div class="form-group">
+        <label for="batchProcessing">Batch Size for Processing:</label>
+        <input type="text" id="batchProcessing" name="batchProcessing" placeholder="Enter batch size">
+    </div>
+
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock content %}

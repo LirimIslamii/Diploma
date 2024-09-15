@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from .forms import ModelConfigForm
 from django.shortcuts import render, redirect
-from .models import ModelConfig
+from .models import ParamsModelConfig
 
 class ParametersView(TemplateView):
     template_name = 'pages/parameters/management.html'
@@ -13,14 +13,14 @@ class ParametersView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ModelConfigForm()
-        context['configs'] = ModelConfig.objects.filter(is_active=True)
+        context['configs'] = ParamsModelConfig.objects.filter(is_active=True)
         context = KTLayout.init(context)
         return context
 
     def post(self, request, *args, **kwargs):
         form = ModelConfigForm(request.POST)
         if form.is_valid():
-            ModelConfig.objects.update(is_active=False)
+            ParamsModelConfig.objects.update(is_active=False)
             new_config = form.save(commit=False)
             new_config.is_active = True
             new_config.save()

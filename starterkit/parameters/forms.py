@@ -1,7 +1,7 @@
 from django import forms
-from .models import ModelConfig
+from .models import ParamsModelConfig
 
 class ModelConfigForm(forms.ModelForm):
     class Meta:
-        model = ModelConfig
+        model = ParamsModelConfig  
         exclude = ('inserted_date','is_active')

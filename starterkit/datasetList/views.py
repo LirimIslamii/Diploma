@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView
-from uploadDataset.models import ModelConfig
+from uploadDataset.models import UploadModelConfig
 from _keenthemes.__init__ import KTLayout
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -13,7 +13,7 @@ class DatasetListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context = KTLayout.init(context)
-        context['datasets'] = ModelConfig.objects.all()
+        context['datasets'] = UploadModelConfig.objects.all()
         return context
     
     def post(self, request, *args, **kwargs):
@@ -21,10 +21,10 @@ class DatasetListView(TemplateView):
         dataset_id = request.POST.get('dataset_id')
         if dataset_id:
             try:
-                dataset = ModelConfig.objects.get(id=dataset_id)
+                dataset = UploadModelConfig.objects.get(id=dataset_id)
                 dataset.delete()
                 messages.success(request, 'Dataset deleted successfully.')
-            except ModelConfig.DoesNotExist:
+            except UploadModelConfig.DoesNotExist:
                 messages.error(request, 'Dataset not found.')
         else:
             messages.error(request, 'Invalid dataset ID.')

@@ -40,7 +40,8 @@
                 <div class="col-md-3 col-sm-6 form-group mt-5">
                     <label class="required form-label">Metrics</label>
                     <select name="metrics" class="form-select form-select-sm" data-control="select2"
-                        data-placeholder="Zgjedh opsionin/opsionet" multiple="multiple">
+                        data-placeholder="Zgjedh opsionin">
+                        <option></option>
                         <option value="accuracy">accuracy</option>
                         <option value="precision">precision</option>
                         <option value="recall">recall</option>
@@ -61,13 +62,13 @@
             </div>
             <div class="row">
                 <div class="col-md-3 col-sm-6 form-group mt-5">
-                    <label class="required form-label">Metrics</label>
+                    <label class="required form-label">Validation metrics</label>
                     <select name="lr_scheduler_params" class="form-select form-select-sm" data-control="select2"
-                        data-placeholder="Zgjedh opsionin">
+                        data-placeholder="Zgjedh opsionin" >
                         <option></option>
-                        <option value="accuracy">val_loss</option>
-                        <option value="precision">val_accuracy</option>
-                        <option value="recall">accuracy</option>
+                        <option value="val_loss">val_loss</option>
+                        <option value="val_accuracy">val_accuracy</option>
+                        <option value="accuracy">accuracy</option>
                     </select>
                 </div>
                 <div class="col-md-3 col-sm-6 form-group mt-5">
@@ -163,9 +164,9 @@
                                 <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>
                             </tr>
                             <tr>
-                                <td class="fs-6">Learning Rate Scheduler Parameters</td>
+                                <td class="fs-6">Validation metrics</td>
                                 <td>{{ config.lr_scheduler_params }}</td>
-                                <td class="fs-6">Përshtatjet në shkallën e të mësuarit gjatë epokave të trajnimit..</td>
+                                <td class="fs-6">Përdoren për të vlerësuar performancën e modelit në bazën e të dhënave të vlefshmërisë gjatë trajnimit.</td>
                                 <td><span class="badge badge-light-success">val_loss, val_accuracy, apo accuracy</span>
                                 </td>
                                 <td class="text-end">{{config.inserted_date|date:"d/m/Y H:m" }}</td>

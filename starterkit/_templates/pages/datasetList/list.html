@@ -11,7 +11,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table id="kt_datatable_both_scrolls" class="table table-row-bordered gy-3 gs-3">
+            <table id="kt_datatable" class="table table-row-bordered gy-3 gs-3">
                 <thead>
                     <tr class="fw-semibold fs-6 text-gray-800">
                         <th>Emri</th>
@@ -27,11 +27,14 @@
                         <td>{{ dataset.description|default:"-" }}</td>
                         <td>{{ dataset.uploaded_at|date:"Y-m-d H:i" }}</td>
                         <td style="width:13%">
-                            <a href="{{ dataset.file.url }}" class="btn btn-sm btn-secondary" download>Shkarko</a>
-                            <form method="post" class="delete-form" data-dataset-name="{{ dataset.name }}" style="display:inline;">
+                            <a href="{{ dataset.file.url }}" download><i class="fas fa-download text-primary"></i></a>
+                            <form method="post" class="delete-form" data-dataset-name="{{ dataset.name }}"
+                                style="display:inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="dataset_id" value="{{ dataset.id }}">
-                                <button type="submit" class="btn btn-sm btn-danger">Fshij</button>
+                                <a href="javascript:void(0);" class="delete-link">
+                                    <i class="fas fa-trash text-danger ms-2"></i>
+                                </a>
                             </form>
                         </td>
                     </tr>
@@ -48,12 +51,20 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        $("#kt_datatable_both_scrolls").DataTable();
-        const deleteForms = document.querySelectorAll('.delete-form');
-        deleteForms.forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                event.preventDefault(); 
+        const table = document.querySelector('#kt_datatable tbody');
+        const rows = table.querySelectorAll('tr');
+        
+        if (rows.length > 0) {
+            $("#kt_datatable").DataTable();
+        }
+        
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        deleteLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();  // Prevent the default link behavior
+                const form = link.closest('form');  // Get the closest form
                 const datasetName = form.getAttribute('data-dataset-name');
+
                 Swal.fire({
                     title: 'A jeni i sigurt?',
                     text: `Dëshironi të fshini datasetin "${datasetName}"?`,
@@ -65,7 +76,7 @@
                     cancelButtonText: 'Anulo'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit();
+                        form.submit();  // Submit the form if the user confirms
                     }
                 });
             });
