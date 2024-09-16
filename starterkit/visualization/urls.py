@@ -1,6 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from visualization.views import VisualisationView
+from trainingProgress.views import GetTrainingProgressView 
 
 app_name = 'visualization'
 

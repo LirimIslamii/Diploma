@@ -8,10 +8,146 @@ context.update({
 
 {% load i18n %}
 
-{% block title %}{% translate "Kërkim dhe Zhvillim" %}{% endblock %}
+{% block title %}{% translate "Procesimi i imazheve" %}{% endblock %}
 
 {% block content %}
 
-<div>Lirim Islami</div>
+<form class="form" action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="dropzone dropzone-queue mb-2" id="kt_dropzonejs_example_2">
+                    <div class="dropzone-panel mb-lg-0 mb-2">
+                        <a class="dropzone-select btn btn-sm btn-primary me-2">Ngarko fotografitë</a>
+                        <a class="dropzone-upload btn btn-sm btn-light-primary me-2">Ngarko të gjitha</a>
+                        <a class="dropzone-remove-all btn btn-sm btn-light-primary">Fshij të gjitha</a>
+                    </div>
+                    <div class="dropzone-items wm-200">
+                        <div class="dropzone-item" style="display:none">
+                            <div class="dropzone-file">
+                                <div class="dropzone-filename" title="some_image_file_name.jpg">
+                                    <span data-dz-name>some_image_file_name.jpg</span>
+                                    <strong>(<span data-dz-size>340kb</span>)</strong>
+                                </div>
 
+                                <div class="dropzone-error" data-dz-errormessage></div>
+                            </div>
+                            <div class="dropzone-progress">
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0"
+                                        aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropzone-toolbar">
+                                <span class="dropzone-start"><i class="bi bi-play-fill fs-3"></i></span>
+                                <span class="dropzone-cancel" data-dz-remove style="display: none;"><i
+                                        class="bi bi-x fs-3"></i></span>
+                                <span class="dropzone-delete" data-dz-remove><i class="bi bi-x fs-1"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="form-text text-muted">Madhësia maksimale e imazhit është 1 MB dhe numri maksimal i imazheve është 5..</span>
+                <div class="col-md-3 col-sm-6 form-group mt-5">
+                    <label class="required form-label">Modeli</label>
+                    <select name="id" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion">
+                        <option></option>
+                        {% for record in model_records %}
+                        <option value="{{ record.id }}">{{ record.model_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const id = "#kt_dropzonejs_example_2";
+        const dropzone = document.querySelector(id);
+
+        var previewNode = dropzone.querySelector(".dropzone-item");
+        previewNode.id = "";
+        var previewTemplate = previewNode.parentNode.innerHTML;
+        previewNode.parentNode.removeChild(previewNode);
+        
+        var csrfToken = '{{ csrf_token }}';
+        var myDropzone = new Dropzone(id, {
+            url: "{{ request.path }}",
+            parallelUploads: 20,
+            previewTemplate: previewTemplate,
+            maxFilesize: 1,
+            autoQueue: false,
+            previewsContainer: id + " .dropzone-items",
+            clickable: id + " .dropzone-select",
+            headers: {
+                "X-CSRFToken": csrfToken
+            }
+        });
+
+        myDropzone.on("addedfile", function (file) {
+            file.previewElement.querySelector(id + " .dropzone-start").onclick = function () { myDropzone.enqueueFile(file); };
+            const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
+            dropzoneItems.forEach(dropzoneItem => {
+                dropzoneItem.style.display = '';
+            });
+            dropzone.querySelector('.dropzone-upload').style.display = "inline-block";
+            dropzone.querySelector('.dropzone-remove-all').style.display = "inline-block";
+        });
+
+        myDropzone.on("totaluploadprogress", function (progress) {
+            const progressBars = dropzone.querySelectorAll('.progress-bar');
+            progressBars.forEach(progressBar => {
+                progressBar.style.width = progress + "%";
+            });
+        });
+
+        myDropzone.on("sending", function (file) {
+            const progressBars = dropzone.querySelectorAll('.progress-bar');
+            progressBars.forEach(progressBar => {
+                progressBar.style.opacity = "1";
+            });
+            file.previewElement.querySelector(id + " .dropzone-start").setAttribute("disabled", "disabled");
+        });
+
+        myDropzone.on("complete", function (progress) {
+            const progressBars = dropzone.querySelectorAll('.dz-complete');
+
+            setTimeout(function () {
+                progressBars.forEach(progressBar => {
+                    progressBar.querySelector('.progress-bar').style.opacity = "0";
+                    progressBar.querySelector('.progress').style.opacity = "0";
+                    progressBar.querySelector('.dropzone-start').style.opacity = "0";
+                });
+            }, 300);
+        });
+
+        dropzone.querySelector(".dropzone-upload").addEventListener('click', function () {
+            myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+        });
+
+        dropzone.querySelector(".dropzone-remove-all").addEventListener('click', function () {
+            dropzone.querySelector('.dropzone-upload').style.display = "none";
+            dropzone.querySelector('.dropzone-remove-all').style.display = "none";
+            myDropzone.removeAllFiles(true);
+        });
+
+        myDropzone.on("queuecomplete", function (progress) {
+            const uploadIcons = dropzone.querySelectorAll('.dropzone-upload');
+            uploadIcons.forEach(uploadIcon => {
+                uploadIcon.style.display = "none";
+            });
+        });
+
+        myDropzone.on("removedfile", function (file) {
+            if (myDropzone.files.length < 1) {
+                dropzone.querySelector('.dropzone-upload').style.display = "none";
+                dropzone.querySelector('.dropzone-remove-all').style.display = "none";
+            }
+        });
+    })
+</script>
 {% endblock content %}

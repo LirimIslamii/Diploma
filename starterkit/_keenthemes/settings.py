@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'parameters',
     'uploadDataset',
+    'visualization',
     # Keenthemes Apps
     'dashboards.apps.DashboardsConfig',
     'auth.apps.AuthConfig',
@@ -63,6 +64,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = '_keenthemes.urls'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 TEMPLATES = [
     {
@@ -99,7 +101,7 @@ DATABASES = {
         'NAME': 'Diploma',
         'USER': '',
         'PASSWORD': '',
-        'HOST': 'DESKTOP-RF1BLIG',
+        'HOST': 'localhost\MSSQLSERVER01',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'Trusted_Connection': 'yes'
