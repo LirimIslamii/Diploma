@@ -16,6 +16,7 @@ import shutil
 import rarfile
 from django.conf import settings
 from tensorflow.keras.callbacks import Callback
+from django.http import JsonResponse
 
 class VisualisationView(TemplateView):
     template_name = "pages/visualization/index.html"
@@ -40,6 +41,18 @@ class VisualisationView(TemplateView):
         datasets = UploadModelConfig.objects.all()
         context["datasets"] = datasets
         return context
+    
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            # Handle AJAX request
+            return self.get_training_progress(request)
+        else:
+            # Handle regular GET request
+            return super().get(request, *args, **kwargs)
+
+    def get_training_progress(self, request):
+        training_progress = request.session.get('training_progress', {'error': 'No progress yet'})
+        return JsonResponse(training_progress)
 
     def post(self, request, *args, **kwargs):
         learning_rate = request.POST.get("learning_rate")
@@ -116,10 +129,8 @@ class VisualisationView(TemplateView):
             batch_size = batch_size * 2
             num_epochs = num_epochs * 2  
 
-        # Optionally, use a more complex model by adding more filters
         num_kernels = num_kernels * 2
 
-        # Move model creation outside of the extraction block
         kernel_size_tuple = tuple(map(int, kernel_size.split("x")))
         base_model = VGG16(weights="imagenet", include_top=False, input_shape=(224, 224, 3))
 
@@ -181,39 +192,20 @@ class VisualisationView(TemplateView):
             validation_steps=validation_generator.samples // batch_size,
             callbacks=callbacks,
         )
-        
-        for epoch in range(num_epochs):
-            if 'loss' in history.history:
-                current_loss = history.history['loss'][epoch]
-                current_accuracy = history.history['accuracy'][epoch]
-                current_val_loss = history.history['val_loss'][epoch]
-                current_val_accuracy = history.history['val_accuracy'][epoch]
-            
-                request.session['training_progress'] = {
-                    'epoch': epoch + 1,
-                    'loss': str(current_loss),
-                    'accuracy': str(current_accuracy),
-                    'val_loss': str(current_val_loss),
-                    'val_accuracy': str(current_val_accuracy)
-                }
-                request.session.modified = True
 
         model.save(f"vgg16_trained_on.h5")
 
 class BatchEndCallback(Callback):
     def __init__(self, request):
+        super().__init__()
         self.request = request
 
     def on_batch_end(self, batch, logs=None):
         logs = logs or {}
         self.request.session['training_progress'] = {
-            'batch': batch + 1,
+            'batch': batch,
             'loss': f"{logs.get('loss', 'n/a'):.4f}",
-            'accuracy': f"{logs.get('accuracy', 'n/a'):.4f}",
-            'val_loss': f"{logs.get('val_loss', 'n/a'):.4f}",
-            'val_accuracy': f"{logs.get('val_accuracy', 'n/a'):.4f}"
+            'accuracy': f"{logs.get('accuracy', 'n/a'):.4f}"
         }
-        print(f"Progresi për batch-in {batch + 1}: {self.request.session['training_progress']}")
         self.request.session.modified = True
         self.request.session.save()
-
