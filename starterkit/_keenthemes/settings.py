@@ -101,7 +101,7 @@ DATABASES = {
         'NAME': 'Diploma',
         'USER': '',
         'PASSWORD': '',
-        'HOST': 'localhost\MSSQLSERVER01',
+        'HOST': 'DESKTOP-RF1BLIG',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'Trusted_Connection': 'yes'

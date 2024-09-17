@@ -8,11 +8,11 @@ context.update({
 
 {% load i18n %}
 
-{% block title %}{% translate "Procesimi i imazheve" %}{% endblock %}
+{% block title %}{% translate "Klasifikimi i imazheve" %}{% endblock %}
 
 {% block content %}
 
-<form class="form" action="" method="post" enctype="multipart/form-data">
+<form class="form" action="" id="kt_form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="card">
         <div class="card-body">
@@ -49,22 +49,43 @@ context.update({
                         </div>
                     </div>
                 </div>
-                <span class="form-text text-muted">Madhësia maksimale e imazhit është 1 MB dhe numri maksimal i imazheve është 5..</span>
+                <span class="form-text text-muted">Madhësia maksimale e imazhit është 3 MB dhe numri maksimal i imazheve
+                    është 5..</span>
                 <div class="col-md-3 col-sm-6 form-group mt-5">
                     <label class="required form-label">Modeli</label>
-                    <select name="id" class="form-select form-select-sm" data-control="select2" data-placeholder="Zgjedh një opsion">
+                    <select name="id" class="form-select form-select-sm" data-control="select2"
+                        data-placeholder="Zgjedh një opsion">
                         <option></option>
-                        {% for record in model_records %}
-                        <option value="{{ record.id }}">{{ record.model_name }}</option>
-                        {% endfor %}
+                        <option value="1">Senitel Model Classification</option>
+                        <option value="2">Tree Model Classification</option>
+                        <option value="3">Default Model Classification</option>
                     </select>
                 </div>
             </div>
         </div>
+        <div class="card-footer">
+            <button type="submit" id="kt_register_submit" class="btn btn-sm btn-primary">Klasifiko imazhin</button>
+            <button type="button" id="kt_reset" class="btn btn-sm btn-secondary" onclick="resetAll()">Reseto formën</button>
+        </div>
     </div>
 </form>
 
+<div id="card-container"></div>
+
 <script>
+    function resetAll() {
+        // Reset the standard form fields
+        document.getElementById('kt_form').reset();
+    
+        // Reset Dropzone
+        var myDropzone = Dropzone.forElement("#kt_dropzonejs_example_2");
+        myDropzone.removeAllFiles(true);  // The 'true' parameter forces the deletion of files from Dropzone's list
+    
+        // Clear any results or status messages
+        document.getElementById('card-container').innerHTML = '';  // Assuming you want to clear this as well
+    
+        // Optionally, reset other UI elements if needed
+    }
     document.addEventListener("DOMContentLoaded", function () {
         const id = "#kt_dropzonejs_example_2";
         const dropzone = document.querySelector(id);
@@ -73,13 +94,13 @@ context.update({
         previewNode.id = "";
         var previewTemplate = previewNode.parentNode.innerHTML;
         previewNode.parentNode.removeChild(previewNode);
-        
+
         var csrfToken = '{{ csrf_token }}';
         var myDropzone = new Dropzone(id, {
             url: "{{ request.path }}",
             parallelUploads: 20,
             previewTemplate: previewTemplate,
-            maxFilesize: 1,
+            maxFilesize: 3,
             autoQueue: false,
             previewsContainer: id + " .dropzone-items",
             clickable: id + " .dropzone-select",
@@ -148,6 +169,68 @@ context.update({
                 dropzone.querySelector('.dropzone-remove-all').style.display = "none";
             }
         });
-    })
+
+        const form = document.getElementById('kt_form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateCardWithImageAndResults(data.result);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        function updateCardWithImageAndResults(results) {
+            const container = document.getElementById('card-container');
+
+            container.innerHTML = '';
+
+            results.forEach((result, index) => {
+                const predictionListItems = result.prediction_probabilities.map(prob => `<li>${prob}</li>`).join(''); // Create list items from probabilities
+                const card = `
+                    <div class="card card-flush mt-5 h-50 w-50">
+                        <div class="card-body py-4">
+                            <div class="row gx-5 h-100">
+                                <div class="col-5">
+                                    <div class="bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px h-100" 
+                                        style="background-size: cover; background-image:url('/media/uploaded_files/${result.file_name}');"></div>
+                                </div>
+                                <div class="col-7">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-3">
+                                            <div class="d-flex flex-stack mb-2">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <span class="text-gray-400 fs-7 fw-bold me-2 d-block lh-1 pb-1">Imazhi ${index + 1}</span>
+                                                </div>
+                                                <span class="badge badge-light-primary flex-shrink-0 align-self-center py-2 px-3 fs-7">Procesuar</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <span class="fw-semibold text-gray-600 fs-6 mb-4 d-block">Imazhi është klasifikuar si ${result.predicted_class}</span>
+                                            <div class="d-flex">
+                                                <ul>
+                                                    ${predictionListItems}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+    });    
 </script>
+
 {% endblock content %}
