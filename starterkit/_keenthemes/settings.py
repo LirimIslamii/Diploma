@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'parameters',
     'uploadDataset',
     'visualization',
+    'research',
     # Keenthemes Apps
     'dashboards.apps.DashboardsConfig',
     'auth.apps.AuthConfig',
@@ -101,7 +102,7 @@ DATABASES = {
         'NAME': 'Diploma',
         'USER': '',
         'PASSWORD': '',
-        'HOST': 'DESKTOP-RF1BLIG',
+        'HOST': 'localhost\MSSQLSERVER01',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'Trusted_Connection': 'yes'

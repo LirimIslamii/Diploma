@@ -65,7 +65,8 @@ context.update({
         </div>
         <div class="card-footer">
             <button type="submit" id="kt_register_submit" class="btn btn-sm btn-primary">Klasifiko imazhin</button>
-            <button type="button" id="kt_reset" class="btn btn-sm btn-secondary" onclick="resetAll()">Reseto formën</button>
+            <button type="button" id="kt_reset" class="btn btn-sm btn-secondary" onclick="resetAll()">Reseto
+                formën</button>
         </div>
     </div>
 </form>
@@ -74,17 +75,10 @@ context.update({
 
 <script>
     function resetAll() {
-        // Reset the standard form fields
         document.getElementById('kt_form').reset();
-    
-        // Reset Dropzone
         var myDropzone = Dropzone.forElement("#kt_dropzonejs_example_2");
-        myDropzone.removeAllFiles(true);  // The 'true' parameter forces the deletion of files from Dropzone's list
-    
-        // Clear any results or status messages
-        document.getElementById('card-container').innerHTML = '';  // Assuming you want to clear this as well
-    
-        // Optionally, reset other UI elements if needed
+        myDropzone.removeAllFiles(true);
+        document.getElementById('card-container').innerHTML = '';
     }
     document.addEventListener("DOMContentLoaded", function () {
         const id = "#kt_dropzonejs_example_2";
@@ -194,7 +188,7 @@ context.update({
             container.innerHTML = '';
 
             results.forEach((result, index) => {
-                const predictionListItems = result.prediction_probabilities.map(prob => `<li>${prob}</li>`).join(''); // Create list items from probabilities
+                const predictionListItems = result.prediction_probabilities.map(prob => `<li>${prob}</li>`).join('');
                 const card = `
                     <div class="card card-flush mt-5 h-50 w-50">
                         <div class="card-body py-4">
