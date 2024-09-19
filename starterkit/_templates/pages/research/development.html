@@ -12,7 +12,7 @@ context.update({
 
 {% block content %}
 
-<form class="form" action="" id="kt_form" method="post" enctype="multipart/form-data">
+<form class="form" action="{% url 'research:development' %}" id="kt_form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="card">
         <div class="card-body">
@@ -50,28 +50,67 @@ context.update({
                     </div>
                 </div>
                 <span class="form-text text-muted">Madhësia maksimale e imazhit është 3 MB dhe numri maksimal i imazheve
-                    është 5..</span>
+                    është 5.</span>
                 <div class="col-md-3 col-sm-6 form-group mt-5">
                     <label class="required form-label">Modeli</label>
                     <select name="id" class="form-select form-select-sm" data-control="select2"
                         data-placeholder="Zgjedh një opsion">
                         <option></option>
-                        <option value="1">Senitel Model Classification</option>
-                        <option value="2">Tree Model Classification</option>
-                        <option value="3">Default Model Classification</option>
+                        <option value="1">Klasifikimi i modelit Senitel</option>
+                        <option value="2">Klasifikimi i modelit të pemës</option>
+                        <option value="3">Klasifikimi i modelit bazë</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" id="kt_register_submit" class="btn btn-sm btn-primary">Klasifiko imazhin</button>
+            <button type="submit" id="kt_register_submit" class="btn btn-sm btn-primary">
+                <span class="indicator-label">Klasifiko imazhin</span>
+                <span class="indicator-progress">Ju lutem prisni...
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+            </button>
             <button type="button" id="kt_reset" class="btn btn-sm btn-secondary" onclick="resetAll()">Reseto
                 formën</button>
         </div>
     </div>
 </form>
 
-<div id="card-container"></div>
+
+{% if results %}
+{% for result in results %}
+<div class="card card-flush mt-5 h-50 w-50">
+    <div class="card-body py-4">
+        <div class="row gx-5 h-100">
+            <div class="col-5">
+                <div class="bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px h-100"
+                    style="background-size: cover; background-image:url('{{ result.file_name }}');"></div>
+            </div>
+            <div class="col-7">
+                <div class="d-flex flex-column h-100">
+                    <div class="d-flex flex-stack mb-2">
+                        <div class="flex-shrink-0 me-3">
+                            <span class="text-gray-400 fs-7 fw-bold me-2 d-block lh-1 pb-1"></span>
+                        </div>
+                        <span
+                            class="badge badge-light-success flex-shrink-0 align-self-center py-2 px-3 fs-7">Procesuar</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="fw-semibold text-gray-600 fs-6 mb-4 d-block">
+                            Imazhi është klasifikuar si {{ result.predicted_class }}
+                        </span>
+                        <ul>
+                            {% for probability in result.prediction_probabilities %}
+                            <li>{{ probability }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
 
 <script>
     function resetAll() {
@@ -164,10 +203,16 @@ context.update({
             }
         });
 
-        const form = document.getElementById('kt_form');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+        document.querySelector('#kt_form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const submitButton = document.querySelector('#kt_register_submit');
+
+            submitButton.setAttribute('data-kt-indicator', 'on');
+
             const formData = new FormData(form);
+
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -177,54 +222,37 @@ context.update({
             })
                 .then(response => response.json())
                 .then(data => {
-                    updateCardWithImageAndResults(data.result);
+                    submitButton.removeAttribute('data-kt-indicator');
+
+                    if (data.message) {
+                        Swal.fire({
+                            text: data.message,
+                            icon: data.status === 'success' ? 'success' : 'warning',
+                            buttonsStyling: false,
+                            confirmButtonText: "Në rregull",
+                            customClass: {
+                                confirmButton: "btn btn-sm btn-primary"
+                            }
+                        }).then(() => {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            }
+                        });
+                    }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    submitButton.removeAttribute('data-kt-indicator');
+                    Swal.fire({
+                        text: 'Ndodhi një gabim gjatë procesimit të imazheve.',
+                        icon: 'error',
+                        buttonsStyling: false,
+                        confirmButtonText: 'Në rregull',
+                        customClass: {
+                            confirmButton: 'btn btn-sm btn-danger'
+                        }
+                    });
+                });
         });
-
-        function updateCardWithImageAndResults(results) {
-            const container = document.getElementById('card-container');
-
-            container.innerHTML = '';
-
-            results.forEach((result, index) => {
-                const predictionListItems = result.prediction_probabilities.map(prob => `<li>${prob}</li>`).join('');
-                const card = `
-                    <div class="card card-flush mt-5 h-50 w-50">
-                        <div class="card-body py-4">
-                            <div class="row gx-5 h-100">
-                                <div class="col-5">
-                                    <div class="bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px h-100" 
-                                        style="background-size: cover; background-image:url('/media/uploaded_files/${result.file_name}');"></div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="d-flex flex-column h-100">
-                                        <div class="mb-3">
-                                            <div class="d-flex flex-stack mb-2">
-                                                <div class="flex-shrink-0 me-3">
-                                                    <span class="text-gray-400 fs-7 fw-bold me-2 d-block lh-1 pb-1">Imazhi ${index + 1}</span>
-                                                </div>
-                                                <span class="badge badge-light-primary flex-shrink-0 align-self-center py-2 px-3 fs-7">Procesuar</span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <span class="fw-semibold text-gray-600 fs-6 mb-4 d-block">Imazhi është klasifikuar si ${result.predicted_class}</span>
-                                            <div class="d-flex">
-                                                <ul>
-                                                    ${predictionListItems}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += card;
-            });
-        }
     });    
 </script>
-
 {% endblock content %}

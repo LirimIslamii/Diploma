@@ -11,14 +11,16 @@ var KTSigninGeneral = (function () {
         username: {
           validators: {
             notEmpty: {
-              message: "Kjo fushë është obligative",
+              message:
+                '<strong class="fw-bold">Kjo fushë është obligative</strong>',
             },
           },
         },
         password: {
           validators: {
             notEmpty: {
-              message: "Kjo fushë është obligative",
+              message:
+                '<strong class="fw-bold">Kjo fushë është obligative</strong>',
             },
           },
         },
@@ -27,10 +29,18 @@ var KTSigninGeneral = (function () {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap: new FormValidation.plugins.Bootstrap5({
           rowSelector: ".fv-row",
-          eleInvalidClass: "",
-          eleValidClass: "",
+          eleInvalidClass: "is-invalid",
+          eleValidClass: "is-valid",
         }),
       },
+    });
+
+    form.querySelectorAll("input[name=password]").forEach(function (input) {
+      input.addEventListener("input", function () {
+        document.querySelectorAll(".custom-input").forEach(function (element) {
+          element.classList.add("is-valid");
+        });
+      });
     });
   };
 
@@ -38,6 +48,9 @@ var KTSigninGeneral = (function () {
     submitButton.addEventListener("click", function (e) {
       e.preventDefault();
       validator.validate().then(function (status) {
+        document.querySelectorAll(".custom-input").forEach(function (element) {
+          element.classList.add("is-valid");
+        });
         if (status == "Valid") {
           submitButton.setAttribute("data-kt-indicator", "on");
           submitButton.disabled = true;
@@ -48,12 +61,11 @@ var KTSigninGeneral = (function () {
   };
 
   var handleSubmitAjax = function () {
-    debugger
-    submitButton.addEventListener("click", function (e) {
+    submitButton.addEventListener('click', function (e) {
       e.preventDefault();
       validator.validate().then(function (status) {
-        if (status === "Valid") {
-          submitButton.setAttribute("data-kt-indicator", "on");
+        if (status === 'Valid') {
+          submitButton.setAttribute('data-kt-indicator', 'on');
           submitButton.disabled = true;
 
           axios
@@ -64,20 +76,8 @@ var KTSigninGeneral = (function () {
             .then(function (response) {
               submitButton.removeAttribute("data-kt-indicator");
               submitButton.disabled = false;
-              Swal.fire({
-                text: "You have successfully logged in!",
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                  confirmButton: "btn btn-primary",
-                },
-              }).then(function (result) {
-                if (result.isConfirmed) {
-                  const redirectUrl = form.getAttribute("data-kt-redirect-url");
-                  location.href = redirectUrl;
-                }
-              });
+              const redirectUrl = form.getAttribute("data-kt-redirect-url");
+              location.href = redirectUrl;
             })
             .catch(function (error) {
               submitButton.removeAttribute("data-kt-indicator");
