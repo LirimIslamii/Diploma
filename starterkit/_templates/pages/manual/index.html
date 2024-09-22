@@ -1,0 +1,53 @@
+{% extends layout %}
+
+{% load i18n %}
+
+{% block title %}{% translate "Manuali i përdorimit" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-center mb-4">{% translate "Manuali i përdorimit" %}</h3>
+            <p class="text-muted text-center mb-5">Ky manual i përdorimit ofron udhëzime të detajuara për hapat që përdoruesit duhet të ndjekin për të maksimizuar efektivitetin e analizës së imazheve satelitore përmes platformës sonë. Ndërveprimet janë të thjeshta dhe intuitive, duke ju lejuar të përqendroheni në analizën e të dhënave që ju interesojnë.</p>
+
+            <div class="mb-4">
+                <h4>{% translate "Ngarkimi i Imazheve" %}</h4>
+                <p>{% translate "Si të ngarkoni imazhet tuaja në platformë dhe këshilla për përpunimin e tyre?" %}</p>
+                <ul>
+                    <li><strong>{% translate "Hapja e Formës së Ngarkimit:" %}</strong> {% translate "Klikoni mbi butonin 'Ngarko fotografitë' për të hapur dritaren e dialogut ku mund të zgjidhni imazhet që dëshironi të ngarkoni." %}</li>
+                    <li><strong>{% translate "Zgjedhja e Imazheve:" %}</strong> {% translate "Navigoni në dosjet tuaja dhe zgjidhni imazhet që dëshironi të ngarkoni. Ju mund të zgjidhni deri në 5 imazhe njëherësh, secila me madhësi jo më shumë se 3 MB." %}</li>
+                    <li><strong>{% translate "Konfirmimi dhe Ngarkimi:" %}</strong> {% translate "Pas zgjedhjes së imazheve, klikoni 'Ngarko' për të filluar procesin e ngarkimit. Një bar progresi do të tregojë statusin e ngarkimit për secilën imazh." %}</li>
+                    <li><strong>{% translate "Zgjedhja e Modelit:" %}</strong> {% translate "Pasi imazhet të jenë ngarkuar, zgjidhni modelin që dëshironi të përdorni nga menuja 'Modeli'. Ky hap është i rëndësishëm për të siguruar që imazhet do të përpunohen sipas modelit të përshtatshëm." %}</li>
+                    <li><strong>{% translate "Klasifikimi i Imazhit:" %}</strong> {% translate "Klikoni mbi butonin 'Klasifiko imazhin' për të nisur procesin e analizës. Rezultatet e klasifikimit do të shfaqen pas përfundimit të përpunimit, duke përfshirë kategoritë e identifikuara dhe metrikat e klasifikimit." %}</li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h4>{% translate "Zgjedhja e parametrave të modelit" %}</h4>
+                <p>{% translate "Ju mund të përshtatni performancën e modelit duke konfiguruar parametrat specifikë si më poshtë:" %}</p>
+                <ul>
+                    <li><strong>{% translate "Norma e Mësimit (Learning Rate):" %}</strong> {% translate "Përcakton se sa shpejt modeli përshtatet me të dhënat e reja. Vlera e ulët mund të çojë në konvergjencë të ngadaltë, ndërsa vlera e lartë mund të shkaktojë luhatje dhe mungesë stabiliteti." %}</li>
+                    <li><strong>{% translate "Numri i Epokave:" %}</strong> {% translate "Tregon sa herë modeli do të përpunojë tërë setin e të dhënave gjatë trajnimit. Numri më i lartë i epokave mund të përmirësojë performancën por rrit rrezikun e mbijetesimit të të dhënave." %}</li>
+                    <li><strong>{% translate "Madhësia e Filtrit (Kernel Size):" %}</strong> {% translate "Madhësia e filtrit në shtresat konvulucionale që përcakton fushën e perceptimit të modelit në imazhe." %}</li>
+                    <li><strong>{% translate "Optimizuesi:" %}</strong> {% translate "Algoritmi që përdoret për të përditësuar peshat e rrjetit, si Adam ose SGD, që ka ndikim të drejtpërdrejtë në shpejtësinë dhe stabilitetin e konvergjencës së modelit." %}</li>
+                    <li><strong>{% translate "Madhësia e Grupit (Batch Size):" %}</strong> {% translate "Numri i mostrave të trajnuara në një iteracion të vetëm. Madhësia më e madhe mund të ofrojë një vlerësim më stabil të gradientit, por kërkon më shumë memorie." %}</li>
+                    <li><strong>{% translate "Metrikat:" %}</strong> {% translate "Caktoni metrikat që do të përdoren për të vlerësuar modelin gjatë trajnimit dhe testimit, si saktësia, precizioni, dhe kthimi." %}</li>
+                </ul>
+            </div>
+            
+            <div class="mb-4">
+                <h4>{% translate "Analiza dhe klasifikimi" %}</h4>
+                <p>{% translate "Pas konfigurimit të parametrave, ju mund të nisni një sesion analize duke ndjekur hapat e mëposhtëm:" %}</p>
+                <ol>
+                    <li><strong>{% translate "Ngarkimi i Imazheve:" %}</strong> {% translate "Ngarkoni imazhet që dëshironi të analizoni përmes formës së ngarkimit siç është përshkruar më lart." %}</li>
+                    <li><strong>{% translate "Zgjedhja e Modelit:" %}</strong> {% translate "Zgjidhni modelin VGG16 ose ndonjë model tjetër të disponueshëm në platformë për të klasifikuar imazhet." %}</li>
+                    <li><strong>{% translate "Klasifikimi:" %}</strong> {% translate "Pas zgjedhjes së modelit, klikoni 'Klasifiko imazhin' për të filluar analizën. Rezultatet e analizës do të përfshijnë kategoritë e identifikuara dhe metrikat relevante." %}</li>
+                </ol>
+                <p>{% translate "Rezultatet mund të shfrytëzohen për të marrë vendime më të informuara në lidhje me objektet e analizuara ose për të marrë hapa të mëtejshëm analitikë." %}</p>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}

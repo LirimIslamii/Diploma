@@ -29,6 +29,7 @@ urlpatterns = [
     path('pages/', include('model.urls')),
     path('pages/', include('visualization.urls')),
     path('pages/', include('research.urls')),
+    path('pages/', include('manual.urls')),
     path('auth/', include('auth.urls')),
 ]
 
